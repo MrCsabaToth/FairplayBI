@@ -26,10 +26,10 @@ public class BitLvalue extends Lvalue {
 	 * @param varLvalue the given VarLvalue.
 	 * @param bit the bit offset in the VarLvalue.
 	 */
-	public BitLvalue(Lvalue base, int bit) {
-		this.base         = base;
+	public BitLvalue(Lvalue varLvalue, int bit) {
+		this.base         = varLvalue;
 		this.bit          = bit;
-		this.isOutput     = base.isOutput();
+		this.isOutput     = varLvalue.isOutput();
 	}
 
 	//~ Methods ----------------------------------------------------------------

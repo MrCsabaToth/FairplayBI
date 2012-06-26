@@ -16,7 +16,7 @@ import java.util.*;
 
 import java.nio.*;
 
-class OT {
+public class OT {
     private static final Logger logger = Logger.getLogger(OT.class);
     private static final int ot_type1 = 1;
     private static final int ot_type2 = 2;
@@ -316,7 +316,7 @@ class OT {
     /**
      * executeSenderOTs_EG: El-Gamal OT
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -404,7 +404,7 @@ class OT {
      * executeSenderOTs_EGBatch: El-Gamal OTs +
      *                           communication batching
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -491,7 +491,7 @@ class OT {
     /**
      * executeSenderOTs_EGNP: El-Gamal OT + Naor-Pinkas opt
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -587,7 +587,7 @@ class OT {
      * executeSenderOTs_EGNPBatch: El-Gamal OTs + Naor-Pinkas opt +
      *                             communication batching
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -668,7 +668,7 @@ class OT {
      * executeSenderOTs_PlainBatch: no real OT +
      *                              communication batching
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -747,7 +747,7 @@ class OT {
      * executeSenderOTs_EGOcomBatch: Only communication alla El-Gamal+
      *                               communication batching
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -844,7 +844,7 @@ class OT {
      * executeSenderOTs_EGNPOcomBatch: Only communication alla EG+NP
      *                                 communication batching
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */
@@ -927,7 +927,7 @@ class OT {
     /**
      * executeSenderOTs_EG_NOC: El-Gamal OT + No Object Communication
      *
-     * @param ottask Vector of OT task to do
+     * @param v Vector of OT task to do
      * @param oos ObjectOutputStream to send messages to Sender
      * @param ois ObjectOutputStream to receive messages from Sender
      */

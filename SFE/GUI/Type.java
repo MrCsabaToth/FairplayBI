@@ -34,7 +34,7 @@ public class Type {
 	public String           nArray     = ""; // Number of elements
 	public String           enumVals   = null; // Enum elements
 	public DefaultListModel structVars = null; // Struct members
-	public boolean          enum       = false;
+	public boolean          _enum       = false;
 	public boolean          struct     = false;
 	private boolean         primitive  = false;
 	private boolean         must       = false;
@@ -105,7 +105,7 @@ public class Type {
 	 */
 	public Type(String name, String vals) {
 		nameDoc      = new ProgramDocument(name);
-		enum         = true;
+		_enum         = true;
 		enumVals     = vals;
 
 		if (this.nameDoc.length() == 0) {
@@ -144,7 +144,7 @@ public class Type {
 		nBits          = DEFAULT_INT_BITS;
 		nArray         = "";
 		this.type      = type;
-		enum           = false;
+		_enum           = false;
 		enumVals       = null;
 		struct         = false;
 		structVars     = null;
@@ -159,7 +159,7 @@ public class Type {
 		nBits          = bits;
 		nArray         = "";
 		type           = INT;
-		enum           = false;
+		_enum           = false;
 		enumVals       = null;
 		struct         = false;
 		structVars     = null;
@@ -176,7 +176,7 @@ public class Type {
 		nBits          = bits;
 		nArray         = array;
 		this.type      = type;
-		enum           = false;
+		_enum           = false;
 		enumVals       = null;
 		struct         = false;
 		structVars     = null;
@@ -191,7 +191,7 @@ public class Type {
 		nBits          = DEFAULT_INT_BITS;
 		nArray         = "";
 		type           = null;
-		enum           = true;
+		_enum           = true;
 		enumVals       = enumData;
 		struct         = false;
 		structVars     = null;
@@ -206,7 +206,7 @@ public class Type {
 		nBits          = DEFAULT_INT_BITS;
 		nArray         = "";
 		type           = null;
-		enum           = false;
+		_enum           = false;
 		enumVals       = null;
 		struct         = true;
 		structVars     = vars;
@@ -262,7 +262,7 @@ public class Type {
 	 * Is type an enumerated type
 	 */
 	public boolean isEnum() {
-		return enum;
+		return _enum;
 	}
 
 	/**
@@ -274,8 +274,6 @@ public class Type {
 
 	/**
 	 * Get Type name
-	 *
-	 * @param Type name
 	 */
 	public String getName() {
 		if (nameDoc.getDoc().length() == 0) {
@@ -311,7 +309,7 @@ public class Type {
 		}
 
 		// enum
-		if (enum) {
+		if (_enum) {
 			return res + "enum {" + enumVals + "}";
 		}
 		// struct

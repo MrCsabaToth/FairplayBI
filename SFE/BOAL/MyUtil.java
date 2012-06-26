@@ -230,7 +230,7 @@ public class MyUtil {
      * different program sections, returns the delta time 
      * (in milli-secs) from previous call to this routine.
      *
-     * @param reset - reset timing measurements.
+     * @param reset_time - reset timing measurements.
      * @return long - delta time (in milli-secs) from previous call.
      */
     public static long deltaTime (boolean reset_time) {
@@ -366,7 +366,7 @@ public class MyUtil {
     /**
      * EG_pow: Perform modular exponentiation g^pow mod p
      *
-     * @param power to exponentiate to
+     * @param pow to exponentiate to
      * @return BigInteger containing the result
      */
     public static BigInteger EG_pow(BigInteger pow) {
@@ -640,7 +640,8 @@ public class MyUtil {
      * @param flush - whether to flus or not.
      */
     public static void sendBytes (ObjectOutputStream oos, byte[] a, boolean flush) {
-        try {
+        logger.debug("Sending "+a.length+"bytes.");
+    	try {
             oos.write(a);
             if (flush) oos.flush();
             //oos.reset();
@@ -656,7 +657,6 @@ public class MyUtil {
      * receiveBytes - receive an array of bytes via ObjectInputStream
      *
      * @param ois - ObjectInputStream to receive the object on.
-     * @return array of bytes that was received.
      */
     public static void receiveBytes(ObjectInputStream ois, byte[] in, int len) {
 
@@ -773,7 +773,6 @@ public class MyUtil {
      *          creates new RSA key, prints it and EXITS!!!
      *
      * @param N - the size in bits of the new modulus
-     * @return Vector that was received.
      */
     public static void newRSA(int N) {
 	System.out.println(modulus.bitLength());

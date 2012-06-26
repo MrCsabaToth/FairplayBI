@@ -4,17 +4,14 @@
 
 package SFE.BOAL;
 
+import java.io.*;
+import java.util.*;
 import org.apache.log4j.*;
 
-import java.io.*;
 
-import java.util.*;
-
-
-/** IO
-    An IO object describes an interaction with Alice or Bob for input/output.
-
-@author: Dahlia Malkhi and Yaron Sella
+/**
+ * IO An IO object describes an interaction with Alice or Bob for input/output.
+ * @author  : Dahlia Malkhi and Yaron Sella
  */
 public class IO implements Serializable {
     static final int MAX_LINES = 512; // Max # of lines per IO format
@@ -117,6 +114,10 @@ public class IO implements Serializable {
      */
     public int getLinenum(int index) {
         return lines[index];
+    }
+    
+    public void setLinenum(int index, int val) {
+    	lines[index]=val;
     }
 
     //---------------------------------------------------------------   

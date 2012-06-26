@@ -114,8 +114,6 @@ public class UnaryOpExpression extends OperationExpression {
 	/**
 	 * Returns a string representing this object as it appear at the
 	 * output circuit.
-	 * @return a string representing this object as it appear at the
-	 * output circuit.
 	 */
 	public void toCircuit(PrintWriter circuit) {
 		if (((PrimitiveOperator) op).isID() &&

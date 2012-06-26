@@ -6,7 +6,6 @@ package SFE.BOAL;
 
 import java.util.*;
 
-
 class OTTASK {
     int ot_id;
     int total;

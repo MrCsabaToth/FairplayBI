@@ -65,7 +65,7 @@ public class Statement {
 	 *
 	 * @param level Indentation level
 	 * @param nextLevel The level of the following line
-	 * @parma code The code line
+	 * @param code The code line
 	 * @param output Wether to output this line in the code
 	 */
 	public Statement(int level, int nextLevel, String code, boolean output) {

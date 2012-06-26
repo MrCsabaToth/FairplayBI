@@ -4,7 +4,7 @@
 
 package SFE.BOAL;
 
-class FormatterError extends Exception {
+public class FormatterError extends Exception {
     public FormatterError(String s) {
         super(s);
 

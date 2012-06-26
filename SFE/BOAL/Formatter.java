@@ -4,13 +4,9 @@
 
 package SFE.BOAL;
 
-import org.apache.log4j.*;
-
 import java.io.*;
-
-import java.math.*;
-
 import java.util.*;
+import org.apache.log4j.*;
 
 
 /** Formatter
@@ -59,22 +55,18 @@ off of output wires 100,101,102; likewise is Bob's output.
 @author: Dahlia Malkhi and Yaron Sella
  */
 /**
- * This class parses an input file containing I/O format specification, and
- * provides routines that interact with the user, and convert input/output
- * to/from internal bit-representation.
+ * Formatter The format file describes the I/O with Alice and Bob in the following format: <p> Input line: <br> Alice/Bob input type "prompt-string" [ line-num1 .. line-numk ] <p> This line has the following interpretation: First, it designated this as Alice or Bob's input. The 'type' specifies the type of input, e.g., integer. The input will be provided by prompting Alice using "prompt-string". The input value is internally translated into k bits, LSB to MSB. These bits are given as input bits to gates in the designated lines. <p> Output line: <br> Alice/Bob output type "output-prefix" [ line-num1 .. line-numk ] <p> This line has the following interpretation: First, it designated this as Alice or Bob's output. The 'type' specifies the type of output, e.g., integer. The output will be gathered from k output gates, LSB to MSB, in the designated output gate lines. These output bits are translated into a value of the designated type, and printed with the designated "output-prefix" <p> Example file is: <br> <code> Alice input integer "Enter # employees (up to 3): " [ 1 2 ] Bob input integer "Enter # employees (up to 3): " [ 3 4 ] Alice output integer "Total # employees: " [ 100 101 102 ] Bob output integer "Total # employees: " [ 100 101 102 ] </code> This indicates that Alice should be prompted for an integer no greater than 3, which appears as input wires 1 and 2. Similarly, Bob should be prompted for his integer value for input wires 3 and 4. The output for Alice is an integer built off of output wires 100,101,102; likewise is Bob's output.
+ * @author  : Dahlia Malkhi and Yaron Sella
  */
 public class Formatter implements Serializable {
     private static final Logger logger = Logger.getLogger(Formatter.class);
-    static final int EOF_INDICATOR = -2; // Input file ended
-    static final int WORD_INDICATOR = -1; // Token read was a WORD
-    StreamTokenizer st;
-    String s = null; // Stores WORD tokens
-    boolean is_alice_line = false; // indicates Alice/Bob line
-    IO curIO = null; // IO object for current line
-    Vector FMT = new Vector(10, 10); // keeps all IO information
-
-    public Formatter() {
-    }
+    protected static final int EOF_INDICATOR = -2; // Input file ended
+    protected static final int WORD_INDICATOR = -1; // Token read was a WORD
+    protected StreamTokenizer st;
+    protected String s = null; // Stores WORD tokens
+    protected boolean is_alice_line = false; // indicates Alice/Bob line
+    protected  IO curIO = null; // IO object for current line
+    protected Vector FMT = new Vector(10, 10); // keeps all IO information
 
     public Formatter(StreamTokenizer st) {
         this.st = st;
@@ -111,7 +103,7 @@ public class Formatter implements Serializable {
             for (int j = 0; j < io.getNLines(); j++) {
                 int line_num = io.getLinenum(j);
                 Gate g = c.getGate(line_num);
-		g.markAliceBob (io.isAlice());
+                g.markAliceBob (io.isAlice());
                 if (g.isBobInput())  tsize[0] += g.gmeasureInpPayload();
                 if (g.isBobOutput()) tsize[1] += g.gmeasureOutPayload();
 	    }
@@ -383,7 +375,6 @@ public class Formatter implements Serializable {
      * and it consumes the entire input file while building an
      * internal representation of the I/O format
      *
-     * @param args - file name to parse expected in args[0].
      * @exception - FormatterError.
      */
     public void parse() throws FormatterError {
@@ -406,7 +397,7 @@ public class Formatter implements Serializable {
      *
      * @exception - FormatterError (bad line name)
      */
-    private void parseLineName() throws FormatterError {
+    protected void parseLineName() throws FormatterError {
         int rc = parseToken(false);
         boolean inp_line = s.equals("input");
         boolean out_line = s.equals("output");
@@ -461,7 +452,7 @@ public class Formatter implements Serializable {
      *
      * @exception - FormatterError (bad input)
      */
-    private void parseNumbers() throws FormatterError {
+    protected void parseNumbers() throws FormatterError {
         while (parseLineNum())
             ;
     }
@@ -537,7 +528,7 @@ public class Formatter implements Serializable {
      * @exception - FormatterError upon StreamTokenizer/IO problem
      * @side-effect - puts WORD token in string s.
      */
-    private int parseToken(boolean eof_ok) throws FormatterError {
+    protected int parseToken(boolean eof_ok) throws FormatterError {
         int status;
         int rc;
 
@@ -577,7 +568,7 @@ public class Formatter implements Serializable {
      * @param s1 - string to be parsed.
      * @exception - FormatterError (expected string not found)
      */
-    private void parseString(String s1) throws FormatterError {
+    protected void parseString(String s1) throws FormatterError {
         parseToken(false);
 
         if (!s.equals(s1)) {

@@ -63,7 +63,7 @@ public class Optimizer {
 
 	/**
 	 * Adds an AssignmentStatement to the usage data structure.
-	 * @param as the AssignmentStatement to be added.
+	 * @param s the AssignmentStatement to be added.
 	 */
 	public static void putUsedStatement(Statement s) {
 		usedStatements.put(s, null);

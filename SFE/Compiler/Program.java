@@ -80,13 +80,11 @@ public class Program {
 	/**
 	 * Returns a string representing this object as it appear at the
 	 * output circuit.
-	 * @return a string representing this object as it appear at the
-	 * output circuit.
 	 */
 	public void toCircuit(PrintWriter circuit, boolean opt) {
 		System.out.println("Writing to circuit file.");
 
-		// assgn new line numbers to the program (in case it was optimized)
+		// assign new line numbers to the program (in case it was optimized)
 		resetCounter();
 
 		// start with the two constant gate false and true.
