@@ -15,3 +15,5 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Contacts Fairplay: ysella at cs.huji.ac.il, dalia at cs.huji.ac.il
 
 Contact FairplayPF: thomaschneider at gmail.com
+
+Contacts FairPlayBI: csaba.toth at vanderbilt.edu, wei.xie at vanderbilt.edu
