@@ -34,9 +34,9 @@ public class Bob {
 	 * @param fmt_filename - format filename
 	 * @param sot_type - type of OT to perform (String)
 	 */
-	public Bob(String circuit_filename, String fmt_filename, String sseed, String sot_type)
-	throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public Bob(String circuit_filename, String fmt_filename, String sseed, String sot_type,
+		InputStreamReader isr) throws IOException {
+		BufferedReader br = new BufferedReader(isr);
 		int i, j;
 		int num_of_iterations;
 		int num_of_circuits;
@@ -240,10 +240,12 @@ public class Bob {
 		String filename;
 		String circ_fname;
 		String fmt_fname;
+		String input_fname;
 		boolean edit = false;
 		boolean compile = false;
 		boolean run = false;
 		boolean opt = false;
+		InputStreamReader isr = null;
 
 		// Load logging configuration file
 		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
@@ -264,7 +266,7 @@ public class Bob {
 		if (run && (args.length < 4))
 			bobUsage(3);
 
-		filename = new String(args[1]);
+		filename = MyUtil.pathFile(new String(args[1]));
 		if (opt) {
 			circ_fname = new String(filename + ".Opt.circuit");
 			fmt_fname = new String(filename + ".Opt.fmt");
@@ -274,11 +276,24 @@ public class Bob {
 			fmt_fname = new String(filename + ".NoOpt.fmt");
 		}
 
+		input_fname = new String(filename + ".Bob.input");
+		{
+			File f = new File(input_fname);
+
+			if (f.exists()) {
+				System.out.println("Bob's input will be read from file: " + input_fname + " instead of stdin");
+				isr = new FileReader(f);
+			} else {
+				System.out.println("Bob's input will be read from stdin, no input file found");
+				isr = new InputStreamReader(System.in);
+			}
+		}
+
 		if (compile) {
 			File f = new File(filename);
 
 			if (!f.exists()) {
-				System.out.println("Input file " + filename + " not found");
+				System.out.println("Input program file " + filename + " not found");
 				bobUsage(4);
 			}
 		}
@@ -289,9 +304,9 @@ public class Bob {
 
 			if (!f1.exists() || !f2.exists()) {
 				if (!f1.exists())
-					System.out.println("Input file " + circ_fname + " not found");
+					System.out.println("Input circuit file " + circ_fname + " not found");
 				if (!f2.exists())
-					System.out.println("Input file " + fmt_fname + " not found");
+					System.out.println("Input format file " + fmt_fname + " not found");
 				bobUsage(5);
 			}
 		}
@@ -309,7 +324,7 @@ public class Bob {
 		if (run) {
 			System.out.println("Running Bob...");
 			try {
-				/*Bob b = */new Bob(circ_fname, fmt_fname, args[2], args[3]);
+				/*Bob b = */new Bob(circ_fname, fmt_fname, args[2], args[3], isr);
 			} catch (Exception e) {
 				System.out.println("Bob's main err: " + e.getMessage());
 				e.printStackTrace();
