@@ -78,8 +78,8 @@ class UnaryMinusOperator extends Operator implements Multi2SingleBit {
 	}
 
 	/**
-	 * Returns an int theat represents the priority of the operator
-	 * @return an int theat represents the priority of the operator
+	 * Returns an int that represents the priority of the operator
+	 * @return an int that represents the priority of the operator
 	 */
 	public int priority() {
 		return 2;

@@ -192,8 +192,8 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	}
 
 	/**
-	 * Adds a statement to this function.
-	 * @param statement the new statement.
+	 * Adds statements to this function.
+	 * @param statements the new statements.
 	 */
 	public void addStatements(Vector statements) {
 		body.addAll(statements);

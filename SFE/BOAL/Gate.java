@@ -4,28 +4,24 @@
 
 package SFE.BOAL;
 
+import java.io.*;
+import java.util.*;
 import org.apache.log4j.*;
 
-import java.io.*;
-
-import java.security.*;
-
-import java.util.*;
-
-
 /**
-* This class holds information on a single gate
-* @author: Dahlia Malkhi and Yaron Sella
-*/
-class Gate implements Serializable {
-    private static final Logger logger = Logger.getLogger(Gate.class);
+ * This class holds information on a single gate
+ * @author  : Dahlia Malkhi and Yaron Sella
+ */
+public class Gate implements Serializable {
+	private static final long serialVersionUID = -3834046572803832410L;
+	private static final Logger logger = Logger.getLogger(Gate.class);
     public static final int REG_GATE = 1;
     public static final int INP_GATE = 2;
     public static final int NBYTESG = 10;
     final int PPOS = 19;
     final int MAX_INPUTS = 20;
     int n_inputs; // # of inputs 
-    int gate_index; // index in the circuit
+    public int gate_index; // index in the circuit
     int gate_type;
     boolean alice_io;
     boolean bob_io;
@@ -65,20 +61,20 @@ class Gate implements Serializable {
         this.gate_type = type;
         this.out_gate = out_gate;
 
-	alice_io = false;
-	bob_io = false;
+        alice_io = false;
+        bob_io = false;
 
-	gate_index = g_idx;
+        gate_index = g_idx;
         n_inputs = n_ins;
         in_gates = new Gate[MAX_INPUTS];
         truth_table = new BitSet(1 << n_inputs);
         value = -1;
 
-        // Fill in garbling related data 
+        // Fill in garbling related   
         code0 = new byte[NBYTESG];
         code1 = new byte[NBYTESG];
-	hcode0 = null;
-	hcode1 = null;
+        hcode0 = null;
+        hcode1 = null;
 
         MyUtil.randomBytes(code0);
         MyUtil.randomBytes(code1);
@@ -142,7 +138,7 @@ class Gate implements Serializable {
      */
     public void markAliceBob(boolean alice) {
         alice_io = alice;
-	bob_io = !alice;
+        bob_io = !alice;
     }
 
     //---------------------------------------------------------------
@@ -201,6 +197,10 @@ class Gate implements Serializable {
     public boolean isOutput() {
         return (out_gate);
     }
+    
+    public void setOutput(boolean out_gate) {
+    	this.out_gate=out_gate;
+    }
  
     //---------------------------------------------------------------
 
@@ -227,25 +227,25 @@ class Gate implements Serializable {
     public boolean isCorrect () {
         int n_ent = (1 << n_inputs); // n_ent = 2^(n_inputs)
         int i, j, permuted_index, count, alice_val, bob_val = (-1);
-	byte[] dec_key, cipher, code;
-
-	if (isInput()) return (true);
+		byte[] dec_key, cipher, code;
+	
+		if (isInput()) return (true);
 
         // Loop enumerates through all possible input values
         for (i = 0; i < n_ent; i++) {
 
-	    // Calculate value according to Alice
-	    // ==================================
-
-            if (truth_table.get(i)) 
-               alice_val = 1;
-	    else
-               alice_val = 0;
-
-	    // Calculate value according to Bob
-	    // ================================
-
-	    // Find permuted_index and decryption key
+		    // Calculate value according to Alice
+		    // ==================================
+	
+	        if (truth_table.get(i))
+                alice_val = 1;
+		    else
+                alice_val = 0;
+	
+		    // Calculate value according to Bob
+		    // ================================
+	
+		    // Find permuted_index and decryption key
             permuted_index = genPermIndex (i);
             dec_key = genKey (i, permuted_index);
 
@@ -253,7 +253,7 @@ class Gate implements Serializable {
             cipher = (byte[]) (encrypted_truth_table.get(permuted_index));
             code = MyUtil.decArrays(cipher, dec_key);
 
-	    // Interpret result according to Bob
+            // Interpret result according to Bob
             for (j = count = 0; j < code0.length; j++)
                 if (code[j] == code0[j]) count += 1;
             if (count == code0.length) bob_val = 0;
@@ -262,16 +262,16 @@ class Gate implements Serializable {
                 if (code[j] == code1[j]) count += 1;
             if (count == code1.length) bob_val = 1;
 
-	    // Sanity check - this should never happen
-	    if (bob_val == -1) {
-               logger.error("Entry no. " + i + ": evaluation for Bob failed!");
-               return false;
-	    }
+		    // Sanity check - this should never happen
+		    if (bob_val == -1) {
+                logger.error("Entry no. " + i + ": evaluation for Bob failed!");
+                return false;
+		    }
 
             if (bob_val != alice_val) {
                logger.error("Entry no. " + i + ": alice_val = " + alice_val + ", bob_val = " + bob_val);
                return false;
-	    }
+            }
         }
         return true;
     }
@@ -324,15 +324,15 @@ class Gate implements Serializable {
         if (bit == 0) {
             if (code0 == null) return(null);
             res = new byte[code0.length];
-	    for (int i = 0 ; i < code0.length ; i++)
-               res[i] = code0[i];
+            for (int i = 0 ; i < code0.length ; i++)
+                res[i] = code0[i];
         } else {
             if (code1 == null) return(null);
             res = new byte[code1.length];
-	    for (int i = 0 ; i < code1.length ; i++)
-               res[i] = code1[i];
+            for (int i = 0 ; i < code1.length ; i++)
+                res[i] = code1[i];
         }
-	return (res);
+        return (res);
     }
 
     //---------------------------------------------------------------
@@ -344,9 +344,9 @@ class Gate implements Serializable {
      */
     public int getValue() {
         if ((value != 0) && (value != 1)) {
-           logger.error("getValue: called on un-evaluated gate") ;
-	   return (0) ;
-	}
+            logger.error("getValue: called on un-evaluated gate") ;
+		    return (0) ;
+		}
 
         return (value);
     }
@@ -377,8 +377,8 @@ class Gate implements Serializable {
 
         garbled_value = new byte[NBYTESG];
 
-	for (int i = 0 ; i < gdataCode.length ; i++)
-           garbled_value[i] = gdataCode[i];
+        for (int i = 0 ; i < gdataCode.length ; i++)
+        	garbled_value[i] = gdataCode[i];
 
         value = interpretCode();
     }
@@ -401,7 +401,6 @@ class Gate implements Serializable {
         assert (index < (1 << n_inputs)) : "genPermIndex: index >= 2^n_inputs (too big)";
 
         for (i = permuted_index = 0; i < n_inputs; i++)
-
             // Isolate relevant bit, flip it if required (perm==1),
             // and put it back in place.
             permuted_index |= ((((index >> i) & 1) ^ in_gates[i].perm) << i);
@@ -510,6 +509,11 @@ class Gate implements Serializable {
         int permuted_index;
         byte[] enc_key;
 
+		// !!!Added by FairplayPF
+        MyUtil.randomBytes(code0);
+        MyUtil.randomBytes(code1);
+        perm = (byte) (MyUtil.randomByte() & 0x01);        
+        
         if (isInput()) {
             return;
         }
@@ -540,10 +544,10 @@ class Gate implements Serializable {
                 permuted_index + "] = " + encrypted_perm[permuted_index]);
         }
 
-	if (isAliceOutput()) {
-           hcode0 = MyUtil.hash(code0, NBYTESG);
-           hcode1 = MyUtil.hash(code1, NBYTESG);
-	}
+        if (isAliceOutput()) {
+            hcode0 = MyUtil.hash(code0, NBYTESG);
+            hcode1 = MyUtil.hash(code1, NBYTESG);
+        }
     }
 
     //---------------------------------------------------------------
@@ -561,7 +565,7 @@ class Gate implements Serializable {
             return 0;
         }
 
-        n_ent = encrypted_truth_table.size() ; 
+        n_ent = encrypted_truth_table.size();
 
         // Count garbled perm bytes
         total_size = n_ent ; 
@@ -570,8 +574,8 @@ class Gate implements Serializable {
         temp = (byte[]) encrypted_truth_table.elementAt(0) ;
         total_size += n_ent * temp.length ;
 
-	if (isAliceOutput()) // Count hashed codes bytes
-           total_size += hcode0.length + hcode1.length;
+        if (isAliceOutput()) // Count hashed codes bytes
+            total_size += hcode0.length + hcode1.length;
 
         return (total_size);
     }
@@ -599,20 +603,20 @@ class Gate implements Serializable {
 
         // Now gather all the data into a result byte array
 
-	for (i = 0; i < n_ent; i++, k++) // Encrypted perm bytes
-           res[k] = encrypted_perm[i];
+        for (i = 0; i < n_ent; i++, k++) // Encrypted perm bytes
+            res[k] = encrypted_perm[i];
 
-	for (i = 0; i < n_ent; i++) { // Encrypted truth table
-           temp = (byte[]) encrypted_truth_table.elementAt(i) ;
-	   for (j = 0; j < temp.length; j++, k++)
-              res[k] = temp[j];
+        for (i = 0; i < n_ent; i++) { // Encrypted truth table
+            temp = (byte[]) encrypted_truth_table.elementAt(i) ;
+	        for (j = 0; j < temp.length; j++, k++)
+	            res[k] = temp[j];
         }
 
-	if (isAliceOutput()) { // Hashes of Alice codes
-	   for (j = 0; j < hcode0.length; j++, k++)
-              res[k] = hcode0[j];
-	   for (j = 0; j < hcode1.length; j++, k++)
-              res[k] = hcode1[j];
+		if (isAliceOutput()) { // Hashes of Alice codes
+		   for (j = 0; j < hcode0.length; j++, k++)
+               res[k] = hcode0[j];
+		   for (j = 0; j < hcode1.length; j++, k++)
+               res[k] = hcode1[j];
         }
            
         return res;
@@ -640,23 +644,23 @@ class Gate implements Serializable {
 
         // Inject all data into appropriate structures
 
-	for (i = 0 ; i < n_ent; i++, k++) // Encrypted perm bytes
-           encrypted_perm[i] = info[k];
+        for (i = 0 ; i < n_ent; i++, k++) // Encrypted perm bytes
+            encrypted_perm[i] = info[k];
 
-	for (i = 0; i < n_ent; i++) { // Encrypted truth table
-           byte[] temp = new byte[NBYTESG] ;
-	   for (j = 0; j < NBYTESG; j++, k++)
-              temp[j] = info[k] ;
-           encrypted_truth_table.add(temp) ;
+        for (i = 0; i < n_ent; i++) { // Encrypted truth table
+            byte[] temp = new byte[NBYTESG] ;
+		    for (j = 0; j < NBYTESG; j++, k++)
+		         temp[j] = info[k] ;
+            encrypted_truth_table.add(temp) ;
         }
 
-	if (isAliceOutput()) { // Hashes of Alice codes
-           hcode0 = new byte[NBYTESG];
-	   for (j = 0; j < NBYTESG; j++, k++)
-              hcode0[j] = info[k] ;
-           hcode1 = new byte[NBYTESG];
-	   for (j = 0; j < NBYTESG; j++, k++)
-              hcode1[j] = info[k] ;
+		if (isAliceOutput()) { // Hashes of Alice codes
+            hcode0 = new byte[NBYTESG];
+		    for (j = 0; j < NBYTESG; j++, k++)
+               hcode0[j] = info[k] ;
+            hcode1 = new byte[NBYTESG];
+		    for (j = 0; j < NBYTESG; j++, k++)
+               hcode1[j] = info[k] ;
         }
            
         return (k - start); // Number of bytes consumed by this gate
@@ -683,7 +687,6 @@ class Gate implements Serializable {
      */
     public byte[] gextractSecPayload() {
         int i, k = 0 ;
-        byte[] temp;
 
         // Create a result byte array with the appropriate size
 
@@ -691,10 +694,10 @@ class Gate implements Serializable {
 
         // Gather all the data into a result byte array
 
-	for (i = 0; i < NBYTESG; i++, k++) // Code0
-           res[k] = code0[i];
-	for (i = 0; i < NBYTESG; i++, k++) // Code1
-           res[k] = code1[i];
+		for (i = 0; i < NBYTESG; i++, k++) // Code0
+	        res[k] = code0[i];
+		for (i = 0; i < NBYTESG; i++, k++) // Code1
+	        res[k] = code1[i];
         res[k] = perm;
 
         return res;
@@ -715,10 +718,10 @@ class Gate implements Serializable {
 
         // Inject all data into appropriate structures
 
-	for (i = 0 ; i < NBYTESG; i++, k++) // code0
-           code0[i] = info[k];
-	for (i = 0 ; i < NBYTESG; i++, k++) // code1
-           code1[i] = info[k];
+		for (i = 0 ; i < NBYTESG; i++, k++) // code0
+	        code0[i] = info[k];
+		for (i = 0 ; i < NBYTESG; i++, k++) // code1
+	        code1[i] = info[k];
         perm = info[k];
         k += 1;
 
@@ -748,7 +751,6 @@ class Gate implements Serializable {
     public byte[] gextractInpPayload() {
         int i, k = 0 ;
         int total_size;
-        byte[] temp;
 
         total_size = gmeasureInpPayload();
         if (total_size == 0) return null;
@@ -759,9 +761,9 @@ class Gate implements Serializable {
 
         // Gather all the data into a result byte array
 
-	for (i = 0; i < NBYTESG; i++, k++) // garbled_value
-           res[k] = garbled_value[i];
-	res[k] = garbled_perm; // garbled_perm
+		for (i = 0; i < NBYTESG; i++, k++) // garbled_value
+            res[k] = garbled_value[i];
+		res[k] = garbled_perm; // garbled_perm
 
         return res;
     }
@@ -780,8 +782,8 @@ class Gate implements Serializable {
 
         // Inject all data into appropriate structures
 
-	for (i = 0 ; i < NBYTESG; i++, k++) // garbled_value
-           garbled_value[i] = info[k];
+		for (i = 0 ; i < NBYTESG; i++, k++) // garbled_value
+            garbled_value[i] = info[k];
         garbled_perm = info[k];
         k += 1;
 
@@ -833,8 +835,8 @@ class Gate implements Serializable {
 
         // Inject all data into appropriate structures
 
-	for (i = 0 ; i < NBYTESG; i++, k++) // garbled_value
-           garbled_value[i] = info[k];
+		for (i = 0 ; i < NBYTESG; i++, k++) // garbled_value
+	        garbled_value[i] = info[k];
         value = interpretCode();
 
         return (k - start); // Number of bytes consumed by this gate
@@ -902,8 +904,8 @@ class Gate implements Serializable {
             // Sanity check
             if ((garbled_perm != 0) && (garbled_perm != 1)) {
                logger.warn("evalGarbledGate: garbled_perm isn't a bit! garbled_perm = " + garbled_perm);
-	       garbled_perm = 0;
-	       value = 0;
+		       garbled_perm = 0;
+		       value = 0;
                return;
             }
 
@@ -911,7 +913,7 @@ class Gate implements Serializable {
             if ((alice_interpret && isAliceOutput()) ||
                 (bob_interpret && isBobOutput())) {
                 value = interpretCode();
-	    }
+		    }
         }
 
         logger.debug("evalGarbledGate: output value is " + value);
@@ -928,17 +930,17 @@ class Gate implements Serializable {
         int j;
 
         if (isInput()) {
-            if (alice_io) 
+            if (alice_io)
                System.out.print("input gate (Alice)");
-	    else if (bob_io) 
+		    else if (bob_io)
                System.out.print("input gate (Bob)");
-	    else
+		    else
                System.out.print("input gate (unknown)");
         }
 
-	if (encrypted_truth_table == null)
+		if (encrypted_truth_table == null)
             System.out.println("ett = null");
-	else {
+		else {
            for (i = 0; i < encrypted_truth_table.size(); i++) {
                System.out.print(" ett_entry[" + i + "] = ");
                arr = (byte[]) encrypted_truth_table.get(i);
@@ -952,7 +954,7 @@ class Gate implements Serializable {
                    System.out.println("");
                }
 
-	       if (truth_table != null)
+		       if (truth_table != null)
                    System.out.println("tt_entry[" + i + "] = " + truth_table.get(i));
            }
        }
@@ -979,10 +981,10 @@ class Gate implements Serializable {
      */
     public int interpretCode() {
         int i, count;
-	byte[] code;
+        byte[] code;
 
         // Evaluation for Alice output against a hash of the garbled value
-	if (isAliceOutput()) {
+        if (isAliceOutput()) {
             code = MyUtil.hash (garbled_value, NBYTESG);
 
             for (i = count = 0; i < hcode0.length; i++)
@@ -992,7 +994,7 @@ class Gate implements Serializable {
             for (i = count = 0; i < hcode1.length; i++)
                 if (code[i] == hcode1[i]) count += 1;
             if (count == hcode1.length) return (1);
-	}
+        }
         // Evaluation for Bob output against the garbled value itself
         else if (isBobOutput()) {
             code = garbled_value;
@@ -1004,14 +1006,26 @@ class Gate implements Serializable {
             for (i = count = 0; i < code1.length; i++)
                 if (code[i] == code1[i]) count += 1;
             if (count == code1.length) return (1);
-	}
-
-	// This code should never be reached
+		}
+	
+		// This code should never be reached
         logger.error ("interpretCode: failed to interpret code");
 
         return (-1); // Can never be reached
     }
 
+    public String toString() {
+    	String s="index="+gate_index+" n_inputs="+n_inputs+" gate_type="+gate_type+" [";
+    	for(int i=0; i<in_gates.length; i++) s+=(in_gates[i]!=null?" "+in_gates[i].gate_index:"");
+    	s+=" ]";
+    	if(garbled_value!=null) {
+    	  s+=" garbled=["+ garbled_value[0]+"...]";
+    	}
+    	else {
+    		s+=" 0:["+code0[0]+"...] 1:["+code1[0]+"...]";
+    	}
+    	return s;
+    }
     //---------------------------------------------------------------
 
     /** Obsolete
@@ -1044,23 +1058,23 @@ class Gate implements Serializable {
 
         Gate new_gate = new Gate(n_inputs, gate_type, out_gate);
 
-	if (code0 != null) {
+		if (code0 != null) {
            new_gate.code0 = new byte[code0.length];
-	   for (int i = 0 ; i < code0.length ; i++)
+		   for (int i = 0 ; i < code0.length ; i++)
                new_gate.code0[i] = code0[i];
-	}
+		}
 
-	if (code1 != null) {
+		if (code1 != null) {
            new_gate.code1 = new byte[code1.length];
-	   for (int i = 0 ; i < code1.length ; i++)
+		   for (int i = 0 ; i < code1.length ; i++)
                new_gate.code1[i] = code1[i];
-	}
+		}
 
         new_gate.perm = this.perm;
-	new_gate.bob_io = this.bob_io;
-	new_gate.alice_io = this.alice_io;
+		new_gate.bob_io = this.bob_io;
+		new_gate.alice_io = this.alice_io;
 
-	return (new_gate);
+		return (new_gate);
     }
     */
 
@@ -1078,11 +1092,11 @@ class Gate implements Serializable {
 
         // Set these fields to meaningless values
         perm = (-1);
-	truth_table = null;
+		truth_table = null;
         code0 = null;
         code1 = null;
 
-	return (new_gate);
+		return (new_gate);
     }
     */
 
@@ -1095,21 +1109,21 @@ class Gate implements Serializable {
      *
     public void restoreGate(Gate g) {
 
-	if (g.code0 != null) {
+		if (g.code0 != null) {
            this.code0 = new byte[g.code0.length];
-	   for (int i = 0 ; i < g.code0.length ; i++)
+		   for (int i = 0 ; i < g.code0.length ; i++)
                code0[i] = g.code0[i];
-	}
+		}
 
-	if (g.code1 != null) {
+		if (g.code1 != null) {
            this.code1 = new byte[g.code1.length];
-	   for (int i = 0 ; i < g.code1.length ; i++)
+		   for (int i = 0 ; i < g.code1.length ; i++)
                code1[i] = g.code1[i];
-	}
+		}
 
         perm = g.perm;
-	bob_io = g.bob_io;
-	alice_io = g.alice_io;
+		bob_io = g.bob_io;
+		alice_io = g.alice_io;
     }
     */
 
@@ -1121,10 +1135,10 @@ class Gate implements Serializable {
     public void copyGarbledInfo (Gate g) {
 
         this.garbled_perm = g.garbled_perm;
-	int len = g.garbled_value.length;
-	this.garbled_value = new byte[len];
+		int len = g.garbled_value.length;
+		this.garbled_value = new byte[len];
 
-	for (int i = 0 ; i < g.garbled_value.length ; i++)
+		for (int i = 0 ; i < g.garbled_value.length ; i++)
            this.garbled_value[i] = g.garbled_value[i];
     }
     */

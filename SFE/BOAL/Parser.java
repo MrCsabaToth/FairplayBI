@@ -4,12 +4,8 @@
 
 package SFE.BOAL;
 
-import org.apache.log4j.*;
-
 import java.io.*;
-
-import java.math.*;
-
+import org.apache.log4j.*;
 
 /** Parser
 
@@ -58,21 +54,19 @@ Explanation: The gate has 2 inputs; The output enumeration is:
 //---------------------------------------------------------------   
 
 /**
- * This class parses an input file containing a circuit,
- * and representing it in internal data structure.
- *
- * @author Dahlia Malkhi and Yaron Sella.
+ * Parser The straight-line input code with inputs and generic gate-descriptions has the following format: <p> (running line number) [output] input <p> or <p> (running line number)         [output] gate arity n table [ 0..(2^n)-1 enumeration of 0/1 outputs ] inputs [ line-num1 .. line-numn ] <br> // outputs for each possible n-bit input <br> // n inputs, designated by line-number <p> Note: a line with a "gate name", of the form: <br> (running line) and line-num1 line-num2 <br> is simply a macro, that expands into: <p> (running line)         gate arity 2 table [ 0 0 0 1 ] inputs [ line-num1 line-num2 ] <br> Explanation: The gate has 2 inputs; The output enumeration is: <br> 00 : output 0 <br> 01 : output 0 <br> 10 : output 0 <br> 11 : output 1
+ * @author  : Dahlia Malkhi and Yaron Sella
  */
 public class Parser {
-    private static final Logger logger = Logger.getLogger(Parser.class);
-    static final int EOF_INDICATOR = -2; // Input file ended
-    static final int WORD_INDICATOR = -1; // Token read was a WORD
-    static final int INPUT_LINE = -2; // Line encountered of type input-line
-    static final int GATE_LINE = -1; // Line encountered of type gate-line
+    protected static final Logger logger = Logger.getLogger(Parser.class);
+    protected static final int EOF_INDICATOR = -2; // Input file ended
+    protected static final int WORD_INDICATOR = -1; // Token read was a WORD
+    protected static final int INPUT_LINE = -2; // Line encountered of type input-line
+    protected static final int GATE_LINE = -1; // Line encountered of type gate-line
     private StreamTokenizer st;
     private String s = null; // Stores WORD tokens
-    private int line_num = -1; // Current line number
-    private int ninputs = 0; // Num of inputs in a gate-line
+    protected int line_num = -1; // Current line number
+    protected int ninputs = 0; // Num of inputs in a gate-line
     private int args_ind = 1;
     private Circuit circuit;
 
@@ -148,7 +142,7 @@ public class Parser {
      * @return true if parsing should continue (a new line encountered).
      * @exception - ParseError (bad line number)
      */
-    private boolean parseLineNum() throws ParseError {
+    protected boolean parseLineNum() throws ParseError {
         int ln = parseToken(true);
 
         if (ln == EOF_INDICATOR) {
@@ -172,7 +166,7 @@ public class Parser {
      * @return indicator for type of line encountered (input or gate)
      * @exception - ParseError (bad line name)
      */
-    private int parseLineName() throws ParseError {
+    protected int parseLineName() throws ParseError {
         int rc = parseToken(false);
         boolean inp_line = s.equals("input");
         boolean gate_line = s.equals("gate");
@@ -223,7 +217,7 @@ public class Parser {
      * @param s1 - string to be parsed.
      * @exception - ParseError (expected string not found)
      */
-    private void parseString(String s1) throws ParseError {
+    protected void parseString(String s1) throws ParseError {
         parseToken(false);
 
         if (!s.equals(s1)) {
@@ -240,7 +234,7 @@ public class Parser {
      * @param s1 - string to be optionally parsed.
      * @return true if specific optional string was found
      */
-    private boolean parseOptString(String s1) throws ParseError {
+    protected boolean parseOptString(String s1) throws ParseError {
         parseToken(false);
 
         boolean rc = s.equals(s1);
@@ -260,7 +254,7 @@ public class Parser {
      * @return - number of inputs that this gate has.
      * @exception - ParseError (bad # of inputs)
      */
-    private int parseNumInputs() throws ParseError {
+    protected int parseNumInputs() throws ParseError {
         final int MAX_INS = 4;
 
         ninputs = parseToken(false);
@@ -298,7 +292,7 @@ public class Parser {
      * @return the wire number parsed from input.
      * @exception - ParseError (bad wire #)
      */
-    private int parseWireNum() throws ParseError {
+    protected int parseWireNum() throws ParseError {
         int wire_num = parseToken(false);
 
         // Verify input line-number makes sense
@@ -353,7 +347,7 @@ public class Parser {
      * @exception - ParseError upon StreamTokenizer/IO problem
      * @side-effect - puts WORD token in string s.
      */
-    private int parseToken(boolean eof_ok) throws ParseError {
+    protected int parseToken(boolean eof_ok) throws ParseError {
         int status;
         int rc;
 
@@ -404,22 +398,22 @@ public class Parser {
      *               args[1] should be format filename
      */
     public static void main(String[] args) {
-        Parser p = null; // the parser and builder of the circuit
-        Formatter f = null; // the parser and builder of the IO
-        BufferedReader br = null; // Reads from stdio
-        int[] dumm = new int[2];
+    	Parser p = null; // the parser and builder of the circuit
+    	Formatter f = null; // the parser and builder of the IO
+    	BufferedReader br = null; // Reads from stdio
+    	int[] dumm = new int[2];
 
-        // Load logging configuration file
-        PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
+    	// Load logging configuration file
+    	PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
 
-	if (args.length != 2) 
-            parserUsage();
+    	if (args.length != 2) 
+    		parserUsage();
 
-	String circuit_filename = args[0] + ".Opt.circuit";
-	String fmt_filename = args[0] + ".Opt.fmt";
-	String sseed = args[1];
+    	String circuit_filename = args[0] + ".Opt.circuit";
+    	String fmt_filename = args[0] + ".Opt.fmt";
+    	String sseed = args[1];
 
-        // Parse the circuit file and prepare the circuit
+    	// Parse the circuit file and prepare the circuit
  
         FileReader fr = null;
         StreamTokenizer st = null;
@@ -444,7 +438,7 @@ public class Parser {
         } catch (Exception e) {
             logger.error("main: exception - " + e.getMessage());
         }
-
+        
         // Parse the IOformat file and prepare the inputs
         //
         FileReader fmt = null;
@@ -472,7 +466,7 @@ public class Parser {
 
         // now do something with the circuit!
         Circuit c = p.getCircuit();
-	f.markIO (c, dumm);
+        f.markIO (c, dumm);        
         c.generateEncCircuit();
 
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -489,7 +483,7 @@ public class Parser {
         f.getBobOutput(c); // print Bob's output
     }
 
-    class ParseError extends Exception {
+    public class ParseError extends Exception {
         public ParseError(String s) {
             super(s);
             logger.error(s);

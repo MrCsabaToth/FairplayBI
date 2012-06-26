@@ -28,7 +28,6 @@ public class PrimitiveOperator extends Operator implements OutputWriter {
 	 * Construct a new PrimitiveOperator from a given int that
 	 * represents the operator.
 	 * @param truthTable the int that represents the truth table.
-	 * @param midSize the size of the operand in case of unary operator.
 	 */
 	public PrimitiveOperator(int truthTable) throws IllegalArgumentException {
 		this(PRIMITIVE_TRUTH_TABLES[truthTable]);
@@ -394,8 +393,6 @@ public class PrimitiveOperator extends Operator implements OutputWriter {
 	/**
 	 * Returns a string representing this object as it appear at the
 	 * output circuit.
-	 * @return a string representing this object as it appear at the
-	 * output circuit.
 	 */
 	public void toCircuit(PrintWriter circuit) {
 		circuit.print("gate arity " + arity() + " table [ ");
@@ -408,6 +405,8 @@ public class PrimitiveOperator extends Operator implements OutputWriter {
 
 	/**
 	 * Returns a string representation of the object.
+	 * @return a string representing this object as it appear at the
+	 * output circuit.
 	 */
 	public String toString() {
 		String str = "gate arity " + arity() + " table [ ";

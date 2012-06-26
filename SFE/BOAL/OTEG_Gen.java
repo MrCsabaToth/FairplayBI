@@ -12,6 +12,9 @@
  */
 
 //---------------------------------------------------------------   
+
+package SFE.BOAL;
+
 import java.math.*;
 
 import java.security.*;
