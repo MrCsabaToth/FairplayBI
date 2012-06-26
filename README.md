@@ -2,7 +2,7 @@ FairPlayBI
 ==========
 
 A version of FairPlay SMC (Secure multi-party computation) software which is _really_ able to handle
-arbitrary long integers. Related links:
+arbitrarily long integers. Related links:
 - Secure multi-party computation: http://en.wikipedia.org/wiki/Secure_multi-party_computation
 - Original project: http://www.cs.huji.ac.il/project/Fairplay/
 - FairplayPF has a patch for Fairplay: http://thomaschneider.de/FairplayPF/
