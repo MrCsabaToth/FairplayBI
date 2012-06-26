@@ -23,7 +23,7 @@ public class Tokenizer {
 	 * Private data members
 	 */
 	private StreamTokenizer tokenizer;
-	private int             keywordIndex; // holds the index of the current keyword 
+	private int keywordIndex; // holds the index of the current keyword 
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -97,8 +97,7 @@ public class Tokenizer {
 	 * @return the keyword constant if and only if current token is a keyword; -1 otherwise
 	 */
 	private int checkKeyword() {
-		for (keywordIndex = 0; keywordIndex < KEYWORDS.length;
-			     keywordIndex++) {
+		for (keywordIndex = 0; keywordIndex < KEYWORDS.length; keywordIndex++) {
 			if (tokenizer.sval.equals(KEYWORDS[keywordIndex])) {
 				return keywordIndex;
 			}
@@ -126,12 +125,10 @@ public class Tokenizer {
 	public int tokenType() {
 		if (tokenizer.ttype == StreamTokenizer.TT_WORD) {
 			if (tokenizer.ttype == '"') { // a quoted string
-
 				return STRING_CONST;
 			} else if (checkKeyword() != -1) {
 				return KEYWORD;
 			}
-
 			return IDENTIFIER;
 		} else if (tokenizer.ttype == StreamTokenizer.TT_NUMBER) {
 			return INT_CONST;
@@ -185,8 +182,8 @@ public class Tokenizer {
 	 * This method should be called only if tokenType() is INT_CONST.
 	 * @return the current token integer value.
 	 */
-	public int intVal() {
-		return (int) tokenizer.nval;
+	public double numberVal() {
+		return tokenizer.nval;
 	}
 
 	/**

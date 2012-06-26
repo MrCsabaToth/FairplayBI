@@ -117,9 +117,6 @@ public class TrinaryOpExpression extends OperationExpression {
 	 * is a result of an unary operator.
 	 */
 	public boolean hasUnaryInput() {
-		Statement  s;
-		Expression sRHS; // RHS of s
-
 		if (left instanceof LvalExpression &&
 			    ((LvalExpression) left).hasUnaryInput()) {
 			return true;
@@ -329,19 +326,19 @@ public class TrinaryOpExpression extends OperationExpression {
 	 * This method is used in the second phase of the optimization.
 	 * @return an array of the input LvalExpressions of this gate.
 	 */
-	public Vector getLvalExpressionInputs() {
-		Vector result = new Vector();
+	public Vector<LvalExpression> getLvalExpressionInputs() {
+		Vector<LvalExpression> result = new Vector<LvalExpression>();
 
 		if (left instanceof LvalExpression) {
-			result.add(left);
+			result.add((LvalExpression)left);
 		}
 
 		if (middle instanceof LvalExpression) {
-			result.add(middle);
+			result.add((LvalExpression)middle);
 		}
 
 		if (right instanceof LvalExpression) {
-			result.add(right);
+			result.add((LvalExpression)right);
 		}
 
 		return result;
@@ -445,7 +442,6 @@ public class TrinaryOpExpression extends OperationExpression {
 	public OperationExpression combineSharedInput() {
 		BinaryOpExpression lowerGate;
 		PrimitiveOperator  gateOp;
-		PrimitiveOperator  newOp;
 
 		if (left.hasSharedInput(right)) {
 			lowerGate =

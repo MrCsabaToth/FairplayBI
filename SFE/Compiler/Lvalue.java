@@ -60,7 +60,7 @@ public abstract class Lvalue {
 	 * in the vector must overide this method.
 	 * @return a vector of all the derived lvalue of this type.
 	 */
-	public Vector getDerivedLvalues() {
+	public Vector<Lvalue> getDerivedLvalues() {
 		return getType().getDerivedLvalues(this);
 	}
 

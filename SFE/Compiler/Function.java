@@ -32,12 +32,12 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	/*
 	 * Holds the body of this function (statements to be carried out).
 	 */
-	private Vector body;
+	private Vector<Statement> body;
 
 	/*
 	 * local parameters used only when a call is made
 	 */
-	public Vector parameters;
+	public Vector<LvalExpression> parameters;
 
 	/*
 	 * holds the LvalExpression returned from this functin.
@@ -57,8 +57,8 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 		this.returnType     = returnType;
 		currentFunction     = this;
 
-		this.body           = new Vector();
-		this.parameters     = new Vector();
+		this.body           = new Vector<Statement>();
+		this.parameters     = new Vector<LvalExpression>();
 
 		// add the function as a local var
 		boolean isOutput = false;
@@ -143,10 +143,10 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 			lvalExp = vars.getVar(name);
 
 			// add only the bit variables
-			Vector derivedLvalues = lvalue.getDerivedLvalues();
+			Vector<Lvalue> derivedLvalues = lvalue.getDerivedLvalues();
 
 			for (int i = 0; i < derivedLvalues.size(); i++) {
-				lvalue = (Lvalue) derivedLvalues.elementAt(i);
+				lvalue = derivedLvalues.elementAt(i);
 
 				if (! (lvalue.hasDerives())) {
 					int lvalSize = lvalue.size();
@@ -195,7 +195,7 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	 * Adds statements to this function.
 	 * @param statements the new statements.
 	 */
-	public void addStatements(Vector statements) {
+	public void addStatements(Vector<Statement> statements) {
 		body.addAll(statements);
 	}
 
@@ -266,11 +266,11 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	public BlockStatement multi2SingleBit(Object obj) {
 		currentFunction = this;
 
-		Vector oldBody = body;
-		body = new Vector();
+		Vector<Statement> oldBody = body;
+		body = new Vector<Statement>();
 
 		for (int i = 0; i < oldBody.size(); i++) {
-			Statement s = ((Statement) (oldBody.elementAt(i)));
+			Statement s = (oldBody.elementAt(i));
 			body.add(((Multi2SingleBit) s).multi2SingleBit(null));
 		}
 
@@ -283,7 +283,7 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	     * Adds the input statements into the output function.
 	     */
 	public void addInputStatements() {
-		Vector parameters = vars.getParameters();
+		Vector<LvalExpression> parameters = vars.getParameters();
 
 		// run over all the parameters LvaluesExpressions
 		for (int i = 0; i < parameters.size(); i++) {
@@ -329,13 +329,13 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 
 		// print the inputs form the OutputWriter
 		for (int i = 0; i < OutputWriter.inputFormat.size(); i++) {
-			Vector inputVector =
-				(Vector) (OutputWriter.inputFormat.elementAt(i));
-			str += ((String) (inputVector.elementAt(0)) + " input integer \"" +
-			(String) (inputVector.elementAt(1)) + "\" [ ");
+			InputFormat inputFormat =
+				OutputWriter.inputFormat.elementAt(i);
+			str += (inputFormat.getPartyName() + " input integer \"" +
+					inputFormat.getIntegerStr() + "\" [ ");
 
-			for (int j = 2; j < inputVector.size(); j++) {
-				InputStatement is = (InputStatement) (inputVector.elementAt(j));
+			for (int j = 0; j < inputFormat.getInputStatements().size(); j++) {
+				InputStatement is = inputFormat.getInputStatements().elementAt(j);
 				str += (is.getOutputLine() + " ");
 			}
 
@@ -367,14 +367,14 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	 * all unneeded statements according to this list.
 	 * @param newBody newBody is always null (needed for other classes).
 	 */
-	public void optimizePhaseII(Vector newBody) {
+	public void optimizePhaseII(Vector<Statement> newBody) {
 		currentFunction = this;
 
 		buildUsedStatementsHash();
 
 		// Build new body that uses only the used statements
-		Vector oldBody = body;
-		body = new Vector();
+		Vector<Statement> oldBody = body;
+		body = new Vector<Statement>();
 
 		for (int i = 0; i < oldBody.size(); i++) {
 			Optimize s = ((Optimize) (oldBody.elementAt(i)));
@@ -425,7 +425,7 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	 * @return HashMap that holds the variables of the scope
 	 * and their references
 	 */
-	public static HashMap popScope() {
+	public static HashMap<String,LvalExpression> popScope() {
 		return vars.popScope();
 	}
 
@@ -433,7 +433,7 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	     * returns the arguments of this function.
 	     * @return the arguments of this function.
 	     */
-	public Vector getArguments() {
+	public Vector<LvalExpression> getArguments() {
 		return parameters;
 	}
 
@@ -441,7 +441,7 @@ public class Function implements OutputWriter, Optimize, Multi2SingleBit {
 	     * returns the body of this function
 	     * @return the body of this function
 	     */
-	public Vector getBody() {
+	public Vector<Statement> getBody() {
 		return body;
 	}
 

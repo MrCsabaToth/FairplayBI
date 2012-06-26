@@ -37,7 +37,7 @@ public class Gate implements Serializable {
     byte[] hcode0;
     byte[] hcode1;
     byte perm; // 0 - not permuted, 1 - permuted
-    Vector encrypted_truth_table;
+    Vector<byte[]> encrypted_truth_table;
     byte[] encrypted_perm;
     byte[] garbled_value = null;
 
@@ -250,7 +250,7 @@ public class Gate implements Serializable {
             dec_key = genKey (i, permuted_index);
 
             // Decrypt
-            cipher = (byte[]) (encrypted_truth_table.get(permuted_index));
+            cipher = encrypted_truth_table.get(permuted_index);
             code = MyUtil.decArrays(cipher, dec_key);
 
             // Interpret result according to Bob
@@ -527,7 +527,7 @@ public class Gate implements Serializable {
         int n_ent = (1 << n_inputs); // n_ent = 2^(n_inputs)
 
         // Create vector and array + fill vector with dummy data
-        encrypted_truth_table = new Vector(n_ent);
+        encrypted_truth_table = new Vector<byte[]>(n_ent);
         encrypted_perm = new byte[n_ent];
 
         for (i = 0; i < n_ent; i++)
@@ -571,11 +571,11 @@ public class Gate implements Serializable {
         n_ent = encrypted_truth_table.size();
 
         // Count garbled perm bytes
-        total_size = n_ent ; 
+        total_size = n_ent;
 
         // Count all bytes in garbled truth table
-        temp = (byte[]) encrypted_truth_table.elementAt(0) ;
-        total_size += n_ent * temp.length ;
+        temp = encrypted_truth_table.elementAt(0);
+        total_size += n_ent * temp.length;
 
         if (isAliceOutput()) // Count hashed codes bytes
             total_size += hcode0.length + hcode1.length;
@@ -610,7 +610,7 @@ public class Gate implements Serializable {
             res[k] = encrypted_perm[i];
 
         for (i = 0; i < n_ent; i++) { // Encrypted truth table
-            temp = (byte[]) encrypted_truth_table.elementAt(i) ;
+            temp = encrypted_truth_table.elementAt(i) ;
 	        for (j = 0; j < temp.length; j++, k++)
 	            res[k] = temp[j];
         }
@@ -642,7 +642,7 @@ public class Gate implements Serializable {
         // Create vector and array of the correct size
 
         n_ent = 1 << n_inputs;
-        encrypted_truth_table = new Vector(n_ent);
+        encrypted_truth_table = new Vector<byte[]>(n_ent);
         encrypted_perm = new byte[n_ent];
 
         // Inject all data into appropriate structures
@@ -900,7 +900,7 @@ public class Gate implements Serializable {
             perm_dec_key = dec_key[PPOS];
 
             // Decrypt
-            cipher = (byte[]) (encrypted_truth_table.get(permuted_index));
+            cipher = encrypted_truth_table.get(permuted_index);
             garbled_value = MyUtil.decArrays(cipher, dec_key);
             garbled_perm = (byte) (encrypted_perm[permuted_index] ^ perm_dec_key);
 
@@ -946,7 +946,7 @@ public class Gate implements Serializable {
 		else {
            for (i = 0; i < encrypted_truth_table.size(); i++) {
                System.out.print(" ett_entry[" + i + "] = ");
-               arr = (byte[]) encrypted_truth_table.get(i);
+               arr = encrypted_truth_table.get(i);
 
                if (arr == null) {
                    System.out.println("null");

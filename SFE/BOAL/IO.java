@@ -5,8 +5,6 @@
 package SFE.BOAL;
 
 import java.io.*;
-import java.util.*;
-import org.apache.log4j.*;
 
 
 /**
@@ -14,7 +12,9 @@ import org.apache.log4j.*;
  * @author  : Dahlia Malkhi and Yaron Sella
  */
 public class IO implements Serializable {
-    static final int MAX_LINES = 512; // Max # of lines per IO format
+	private static final long serialVersionUID = 4115098415567379720L;
+
+	static final int MAX_LINES = 8192; // Max # of lines per IO format
     private boolean is_input = false;
     private boolean is_alice = false;
     private String prefix = null;

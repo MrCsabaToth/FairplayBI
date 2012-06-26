@@ -5,7 +5,9 @@
 package SFE.BOAL;
 
 public class FormatterError extends Exception {
-    public FormatterError(String s) {
+	private static final long serialVersionUID = 3983733225921090467L;
+
+	public FormatterError(String s) {
         super(s);
 
         // logger.error (s) ;

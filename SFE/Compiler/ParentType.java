@@ -20,7 +20,7 @@ public abstract class ParentType extends Type {
 	 * in the vector must overide this method.
 	 * @param base the lavalue that call the this method (base.type == this)
 	 */
-	public abstract Vector getDerivedLvalues(Lvalue base);
+	public abstract Vector<Lvalue> getDerivedLvalues(Lvalue base);
 
 	/**
 	 * Returns true, if these types has drived vars.

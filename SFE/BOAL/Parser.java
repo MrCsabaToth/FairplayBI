@@ -67,7 +67,6 @@ public class Parser {
     private String s = null; // Stores WORD tokens
     protected int line_num = -1; // Current line number
     protected int ninputs = 0; // Num of inputs in a gate-line
-    private int args_ind = 1;
     private Circuit circuit;
 
     //---------------------------------------------------------------   
@@ -111,7 +110,7 @@ public class Parser {
 
                 if (line_type == INPUT_LINE) {
                     // add input entry to straight-line code vector
-                    Gate g = circuit.addGate(0, Gate.INP_GATE, out_line);
+                    /*Gate g = */circuit.addGate(0, Gate.INP_GATE, out_line);
                 } else {
                     parseGate(out_line);
                 }
@@ -484,7 +483,9 @@ public class Parser {
     }
 
     public class ParseError extends Exception {
-        public ParseError(String s) {
+		private static final long serialVersionUID = -1589342099737020147L;
+
+		public ParseError(String s) {
             super(s);
             logger.error(s);
         }

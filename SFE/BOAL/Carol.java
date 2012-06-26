@@ -8,17 +8,7 @@ import org.apache.log4j.*;
 
 import java.io.*;
 
-import java.math.*;
-
 import java.net.*;
-
-import java.util.regex.*;
-
-import SFE.BOAL.*;
-
-import SFE.Compiler.*;
-
-import SFE.GUI.*;
 
 /** Carol
  *  @author: Dahlia Malkhi and Yaron Sella
@@ -49,7 +39,6 @@ public class Carol {
     public Carol (String[] args) throws Exception {
         Socket sock = null;
         ObjectInputStream fromDave = null;
-        ObjectOutputStream toDave = null;
         int mess_len = Integer.parseInt(args[0]);
         int num_iterations = Integer.parseInt (args[1]);
         int i;
@@ -99,18 +88,18 @@ public class Carol {
     public static void main(String[] args) throws Exception {
 
         // Load logging configuration file
-	PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
-
-	// Various legality tests on command line parameters
+		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
+	
+		// Various legality tests on command line parameters
 
         if (args.length != 3) carolUsage();
 
         System.out.println("Running Carol...");
         try {
-            Carol c = new Carol(args);
+            /*Carol c = */new Carol(args);
         } catch (Exception e) {
             System.out.println("Carol's main err: " + e.getMessage());
             e.printStackTrace();
-	}
+        }
     }
 }

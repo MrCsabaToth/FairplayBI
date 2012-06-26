@@ -10,8 +10,6 @@ import java.io.*;
 
 import java.math.*;
 
-import java.net.*;
-
 import java.security.*;
 
 import java.util.*;
@@ -41,8 +39,8 @@ public class MyUtil {
             "98e8faed0541c79430cd24e8c1e414dfe7824335368993e22400117a85b7c50d" +
             "7f5cd557076cac3e0afaa26cf5dba7b5e043cbdb02eccba3ea1b41d2e5100c5",
             +16);
-    private static final BigInteger q = new BigInteger("e5dd551b16375da4f47aaba7f2272556ae0fcc47",
-            16);
+//    private static final BigInteger q = new BigInteger("e5dd551b16375da4f47aaba7f2272556ae0fcc47",
+//            16);
     private static final BigInteger g = new BigInteger(
             "12b49a27df027dab8492525e74e674702e50662b42ff4d8ac6adcbead05288cd" +
             "adcd6adeabb16f2cebe6cd6bd26ac0e52e21ca081ec70e2bc5be0c50cc81921e" +
@@ -203,12 +201,12 @@ public class MyUtil {
     public static byte[] toByteArray (int in) {
         byte[] b = new byte[4];
 
-	b[0] = (byte) (in         & 0xff);
-	b[1] = (byte) ((in >>  8) & 0xff);
-	b[2] = (byte) ((in >> 16) & 0xff);
-	b[3] = (byte) ((in >> 24) & 0xff);
-
-	return (b);
+		b[0] = (byte) (in         & 0xff);
+		b[1] = (byte) ((in >>  8) & 0xff);
+		b[2] = (byte) ((in >> 16) & 0xff);
+		b[3] = (byte) ((in >> 24) & 0xff);
+	
+		return (b);
     }
 
     //---------------------------------------------------------------
@@ -236,15 +234,16 @@ public class MyUtil {
     public static long deltaTime (boolean reset_time) {
 
         long delta;
-	long current_time = Calendar.getInstance().getTimeInMillis();
 
-	if (reset_time) {
-	   delta = 0;
-           rec_time = current_time;
-        } else {
-	   delta = current_time - rec_time;
-	   rec_time = current_time;
-	}
+        long current_time = Calendar.getInstance().getTimeInMillis();
+
+		if (reset_time) {
+		    delta = 0;
+	        rec_time = current_time;
+	    } else {
+		    delta = current_time - rec_time;
+		    rec_time = current_time;
+		}
 
         return (delta);
     }
@@ -262,9 +261,9 @@ public class MyUtil {
         long delta = 0;
         long current_heapsize = rtm.totalMemory()-rtm.freeMemory();
 
-	if (rec_heapsize != 0)
-	   delta = current_heapsize - rec_heapsize;
-	rec_heapsize = current_heapsize;
+		if (rec_heapsize != 0)
+		   delta = current_heapsize - rec_heapsize;
+		rec_heapsize = current_heapsize;
 
         return (delta);
     }
@@ -409,7 +408,6 @@ public class MyUtil {
      * @return BigInteger containing g
      */
     public static BigInteger EG_g() {
-
         return (g);
     }
 
@@ -421,11 +419,11 @@ public class MyUtil {
      */
     public static void BigInt2FixedBytes (BigInteger num, byte[] res) {
         byte[] temp = num.toByteArray() ;
-	int j;
-
-	res[0] = (byte) (temp.length);
-	for (j = 0 ; j < temp.length; j++)
-           res[j+1] = temp[j];
+		int j;
+	
+		res[0] = (byte) (temp.length);
+		for (j = 0 ; j < temp.length; j++)
+			res[j + 1] = temp[j];
     }
 
     //---------------------------------------------------------------
@@ -435,17 +433,16 @@ public class MyUtil {
      * BigInteger (smaller than the El-Gamal prime)
      */
     public static BigInteger FixedBytes2BigInt (byte[] ba) {
-
         int j, len = ba[0];
-	if (len < 0) len += 256;
-        byte[] temp = new byte[len];
-
-	for (j = 0; j < len; j++)
-            temp[j] = ba[j+1];
-
-        BigInteger num = new BigInteger (temp);
-
-	return num;
+		if (len < 0) len += 256;
+	        byte[] temp = new byte[len];
+	
+		for (j = 0; j < len; j++)
+			temp[j] = ba[j + 1];
+	
+		BigInteger num = new BigInteger (temp);
+	
+		return num;
     }
 
 
@@ -456,17 +453,16 @@ public class MyUtil {
      * than the El-Gamal prime) into a fixed size byte array.
      */
     public static void BigInts2FixedBytes (BigInteger[] nums, byte[] res) {
-	int i, j, k, start_pos;
-
-	for (i = start_pos = 0 ; i < nums.length; i++) {
-
-           byte[] temp = nums[i].toByteArray() ;
-
-	   res[start_pos] = (byte) (temp.length);
-	   for (j = 0, k = start_pos+1 ; j < temp.length; j++, k++)
-              res[k] = temp[j];
-	   start_pos += 129;
-	}
+		int i, j, k, start_pos;
+	
+		for (i = start_pos = 0; i < nums.length; i++) {
+			byte[] temp = nums[i].toByteArray();
+	
+			res[start_pos] = (byte) (temp.length);
+			for (j = 0, k = start_pos + 1; j < temp.length; j++, k++)
+				res[k] = temp[j];
+			start_pos += 129;
+		}
     }
  
     //---------------------------------------------------------------
@@ -475,25 +471,23 @@ public class MyUtil {
      * FixedBytes2BigInts: converts a fixed size byte array to an 
      * array of BigIntegers (smaller than the El-Gamal prime)
      */
-    public static BigInteger[] FixedBytes2BigInts (byte[] ba, int pos,
-		                                   int how_many) {
+    public static BigInteger[] FixedBytes2BigInts (byte[] ba, int pos, int how_many) {
         int i, j, k, start_pos = pos;
-	BigInteger[] nums = new BigInteger[how_many];
+		BigInteger[] nums = new BigInteger[how_many];
+	
+		for (i = 0; i < how_many; i++) {	
+			int len = ba[start_pos];
+			if (len < 0) len += 256;
+				byte[] temp = new byte[len];
 
-	for (i = 0; i < how_many; i++) {
+			for (j = 0, k = start_pos + 1; j < len; j++, k++)
+				temp[j] = ba[k];
+			start_pos += 129;
 
-           int len = ba[start_pos];
-	   if (len < 0) len += 256;
-           byte[] temp = new byte[len];
-            
-	   for (j = 0, k = start_pos+1; j < len; j++, k++)
-              temp[j] = ba[k];
-	   start_pos += 129;
-
-	   nums[i] = new BigInteger(temp);
-	}
-
-	return nums;
+			nums[i] = new BigInteger(temp);
+		}
+	
+		return nums;
     }
 
     //---------------------------------------------------------------
@@ -687,7 +681,7 @@ public class MyUtil {
      * @param oos - ObjectOutputStream to send the object on.
      * @param v - object to send.
      */
-    public static void sendVector(ObjectOutputStream oos, Vector v) {
+    public static void sendVector(ObjectOutputStream oos, Vector<OTTASK> v) {
         try {
             oos.writeObject(v);
             oos.flush();
@@ -705,11 +699,12 @@ public class MyUtil {
      * @param ois - ObjectInputStream to receive the object on.
      * @return Vector that was received.
      */
-    public static Vector receiveVector(ObjectInputStream ois) {
-        Vector v = new Vector();
+    @SuppressWarnings("unchecked")
+	public static Vector<OTTASK> receiveVector(ObjectInputStream ois) {
+        Vector<OTTASK> v = new Vector<OTTASK>();
 
         try {
-            v = (Vector) ois.readObject();
+            v = (Vector<OTTASK>) ois.readObject();
         } catch (IOException e) {
             System.out.println("receiveVector failed (IOException): " +
                 e.getMessage());
@@ -775,62 +770,61 @@ public class MyUtil {
      * @param N - the size in bits of the new modulus
      */
     public static void newRSA(int N) {
-	System.out.println(modulus.bitLength());
-	do {
-	    key_size = N;
-	    p_prime = BigInteger.probablePrime(N/2, random);
-	    q_prime = BigInteger.probablePrime(N/2, random);
-	    phi = (p_prime.subtract(BigInteger.ONE)).multiply(q_prime.subtract(BigInteger.ONE));
-	    modulus    = p_prime.multiply(q_prime);                            
-	    publicKey  = new BigInteger("1");     // common value in practice = 2^16 + 1
-	    privateKey = publicKey.modInverse(phi);
+		System.out.println(modulus.bitLength());
+		do {
+		    key_size = N;
+		    p_prime = BigInteger.probablePrime(N/2, random);
+		    q_prime = BigInteger.probablePrime(N/2, random);
+		    phi = (p_prime.subtract(BigInteger.ONE)).multiply(q_prime.subtract(BigInteger.ONE));
+		    modulus    = p_prime.multiply(q_prime);                            
+		    publicKey  = new BigInteger("1");     // common value in practice = 2^16 + 1
+		    privateKey = publicKey.modInverse(phi);
+		} while (((phi.gcd(publicKey)).compareTo(BigInteger.ONE)) != 0);
+		dp = privateKey.mod(p_prime.subtract(BigInteger.ONE));
+		dq = privateKey.mod(q_prime.subtract(BigInteger.ONE));
+		pinverseq = p_prime.modInverse(q_prime);
+			
+		System.out.println("Please update the following data in MyUtil");
+		System.out.println("privateKey: "+privateKey);
+		System.out.println("publicKey:  "+publicKey);
+		System.out.println("p_prime:    "+p_prime);
+		System.out.println("q_prime:    "+q_prime);
+		System.out.println("phi:        "+phi);
+		System.out.println("key_size:   "+key_size);
+		System.out.println("modulus:    "+modulus);
+		System.out.println("dp:         "+dp);
+		System.out.println("dq:         "+dq);
+		System.out.println("pinverseq:  "+pinverseq);
+	    System.out.println("Update the keys and re-run the program");
+		System.exit(0);
 	}
-	while (((phi.gcd(publicKey)).compareTo(BigInteger.ONE)) != 0);
-	dp = privateKey.mod(p_prime.subtract(BigInteger.ONE));
-	dq = privateKey.mod(q_prime.subtract(BigInteger.ONE));
-	pinverseq = p_prime.modInverse(q_prime);
-		
-	System.out.println("Please update the following data in MyUtil");
-	System.out.println("privateKey: "+privateKey);
-	System.out.println("publicKey:  "+publicKey);
-	System.out.println("p_prime:    "+p_prime);
-	System.out.println("q_prime:    "+q_prime);
-	System.out.println("phi:        "+phi);
-	System.out.println("key_size:   "+key_size);
-	System.out.println("modulus:    "+modulus);
-	System.out.println("dp:         "+dp);
-	System.out.println("dq:         "+dq);
-	System.out.println("pinverseq:  "+pinverseq);
-       	System.out.println("Update the keys and re-run the program");
-	System.exit(0);
-    }
-
-    public static BigInteger decrypt(BigInteger c) {
-	BigInteger cDp = c.modPow(dp, p_prime);
-	BigInteger cDq = c.modPow(dq, q_prime);
-	BigInteger u = ((cDq.subtract(cDp)).multiply(pinverseq)).remainder(q_prime);
-	if (u.compareTo(BigInteger.ZERO) < 0) u = u.add(q_prime);
-	return cDp.add(u.multiply(p_prime));
+	
+	public static BigInteger decrypt(BigInteger c) {
+		BigInteger cDp = c.modPow(dp, p_prime);
+		BigInteger cDq = c.modPow(dq, q_prime);
+		BigInteger u = ((cDq.subtract(cDp)).multiply(pinverseq)).remainder(q_prime);
+		if (u.compareTo(BigInteger.ZERO) < 0) u = u.add(q_prime);
+		return cDp.add(u.multiply(p_prime));
     }
 
     public static BigInteger encrypt(BigInteger m) {
-	return m.modPow(publicKey,modulus);
+    	return m.modPow(publicKey,modulus);
     }
 
     public static BigInteger pad(BigInteger bi){
-	byte[] output = new byte[MyUtil.key_size/8];
-	byte[] bi_byte_array = bi.toByteArray();
-	byte[] r = new byte[MyUtil.key_size/8 - (bi.toByteArray()).length - 3];
+		byte[] output = new byte[MyUtil.key_size/8];
+		byte[] bi_byte_array = bi.toByteArray();
+		byte[] r = new byte[MyUtil.key_size/8 - (bi.toByteArray()).length - 3];
+		
+		MyUtil.randomBytes(r);
+		output[0]=0;
+		output[1]=2;
+		for (int j = 0 ; j < r.length; j++)
+		    output[j+2] = r[j]; 
+		output[2+r.length]=0;
+		for (int j = 0 ; j < bi_byte_array.length; j++)
+		    output[3+r.length+j] = bi_byte_array[j]; 
 	
-	MyUtil.randomBytes(r);
-	output[0]=0;
-	output[1]=2;
-	for (int j = 0 ; j < r.length; j++)
-	    output[j+2] = r[j]; 
-	output[2+r.length]=0;
-	for (int j = 0 ; j < bi_byte_array.length; j++)
-	    output[3+r.length+j] = bi_byte_array[j]; 
-
-	return (new BigInteger(output));
+		return (new BigInteger(output));
     }
 }

@@ -62,13 +62,13 @@ public class IfStatement extends Statement {
 		newBlock.addStatement(thenBlock.uniqueVars());
 
 		//end the scope
-		HashMap endedScope = Function.popScope();
+		HashMap<String,LvalExpression> endedScope = Function.popScope();
 
 		//update the vars from the previuos scope
-		Iterator it = endedScope.keySet().iterator();
+		Iterator<String> it = endedScope.keySet().iterator();
 
 		while (it.hasNext()) {
-			String lvalName = (String) (it.next());
+			String lvalName = it.next();
 
 			//lval in if block
 			LvalExpression lvalInIf = (LvalExpression) endedScope.get(lvalName);

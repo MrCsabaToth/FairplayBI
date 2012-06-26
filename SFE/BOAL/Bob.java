@@ -49,7 +49,6 @@ public class Bob {
 		Socket sock = null;
 		ObjectInputStream fromAlice = null;
 		ObjectOutputStream toAlice = null;
-		Vector bob_results;
 
 		// Preparations
 		MyUtil.init(sseed);
@@ -74,8 +73,8 @@ public class Bob {
 		num_of_circuits = aint & 0xff ;
 		num_of_iterations = aint >> 8 ;
 
-		Vector vEncPayload = new Vector (num_of_circuits);
-		Vector vSecPayload = new Vector (num_of_circuits);
+		Vector<byte[]> vEncPayload = new Vector<byte[]> (num_of_circuits);
+		Vector<byte[]> vSecPayload = new Vector<byte[]> (num_of_circuits);
 		byte[] EncPayload;
 		byte[] SecPayload;
 		byte[] InpPayload;
@@ -164,14 +163,14 @@ public class Bob {
 			// Send encrypted circuits secrets (except the chosen one) to Alice
 			for (j = 0; j < num_of_circuits; j++) {
 				if (j != cc_num) {
-					SecPayload = (byte[]) vSecPayload.elementAt(j);
+					SecPayload = vSecPayload.elementAt(j);
 					MyUtil.sendBytes (toAlice, SecPayload, false);
 				}
 			}
 			toAlice.flush();
 
 			// Upload the secrets of the chosen circuit
-			SecPayload = (byte[]) vSecPayload.elementAt(cc_num);
+			SecPayload = vSecPayload.elementAt(cc_num);
 			c.cinjectSecPayload(SecPayload);
 
 			
@@ -310,7 +309,7 @@ public class Bob {
 		if (run) {
 			System.out.println("Running Bob...");
 			try {
-				Bob b = new Bob(circ_fname, fmt_fname, args[2], args[3]);
+				/*Bob b = */new Bob(circ_fname, fmt_fname, args[2], args[3]);
 			} catch (Exception e) {
 				System.out.println("Bob's main err: " + e.getMessage());
 				e.printStackTrace();

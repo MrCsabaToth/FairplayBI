@@ -49,7 +49,6 @@ public class Alice {
 		Socket sock = null;
 		ObjectInputStream fromBob = null;
 		ObjectOutputStream toBob = null;
-		Vector bob_results;
 		long sum1=0, sum2=0, sum3=0, sum4=0;
 
 		// Preparations
@@ -73,7 +72,7 @@ public class Alice {
 		ot_type = MyUtil.receiveInt(fromBob);
 		ot = new OT(ot_type);
 
-		Vector vEncPayload = new Vector (num_of_circuits);
+		Vector<byte[]> vEncPayload = new Vector<byte[]> (num_of_circuits);
 		byte[] EncPayload;
 		byte[] SecPayload;
 		byte[] InpPayload;
@@ -163,7 +162,7 @@ public class Alice {
 			// (except the chosen one) from Bob
 			for (j = 0; j < num_of_circuits ; j++) {
 				if (j != cc_num) {
-					EncPayload = (byte[]) vEncPayload.elementAt(j);
+					EncPayload = vEncPayload.elementAt(j);
 					c.cinjectEncPayload (EncPayload);
 					SecPayload = new byte[SecPayloadSize];
 					MyUtil.receiveBytes (fromBob, SecPayload, SecPayloadSize);
@@ -176,7 +175,7 @@ public class Alice {
 			}
 			
 			// UPDATED by Thomas Schneider
-			c.cinjectEncPayload((byte[]) vEncPayload.elementAt(cc_num));
+			c.cinjectEncPayload(vEncPayload.elementAt(cc_num));
 			
 			// Receive Bob's inputs for the chosen circuit and place them in it
 			InpPayload = new byte[InpPayloadSize];
@@ -340,7 +339,7 @@ public class Alice {
 					num_iterations = 1 ;
 				else
 					num_iterations = Integer.parseInt(args[4]);
-				Alice a = new Alice(circ_fname, fmt_fname, args[2], args[3], num_iterations, run_stats);
+				/*Alice a = */new Alice(circ_fname, fmt_fname, args[2], args[3], num_iterations, run_stats);
 			} catch (Exception e) {
 				System.out.println("Alice's main err: " + e.getMessage());
 				e.printStackTrace();

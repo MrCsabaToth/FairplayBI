@@ -10,7 +10,9 @@ import java.math.*;
 
 
 class OTMESS implements Serializable {
-    BigInteger[] num;
+	private static final long serialVersionUID = -2614119124762456655L;
+
+	BigInteger[] num;
 
     public OTMESS() {
     }
