@@ -5,6 +5,7 @@
 package SFE.Compiler;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 /**
@@ -15,7 +16,7 @@ public class Optimizer {
 
 	/**
 	 * Associates the specified gate with it's circuit representation (String) in this map.
-	 * NOTE: this method shold be called only if containsGate() and containsNegGate
+	 * NOTE: this method should be called only if containsGate() and containsNegGate
 	 * are false.
 	 * @param gate the gate (OperationExpression) to be added.
 	 * @param holdingExpression the lValexpression that hold the result of the gate.
@@ -66,7 +67,7 @@ public class Optimizer {
 	 * @param s the AssignmentStatement to be added.
 	 */
 	public static void putUsedStatement(Statement s) {
-		usedStatements.put(s, null);
+		usedStatements.add(s);
 	}
 
 	/**
@@ -75,12 +76,12 @@ public class Optimizer {
 	 * @return true is s is needed to calculate the output pins of the circuit.
 	 */
 	public static boolean isUsed(Statement s) {
-		return usedStatements.containsKey(s);
+		return usedStatements.contains(s);
 	}
 
 	//~ Static fields/initializers ---------------------------------------------
 
-	private static HashMap gates = new HashMap();
+	private static HashMap<String,Expression> gates = new HashMap<String,Expression>();
 
 	/*
 	 * This data structure holds all the statements and their
@@ -91,5 +92,5 @@ public class Optimizer {
 	 * compute the programs output. Afterwards the statement that will be left
 	 * in usage table can be removed from the program.
 	 */
-	private static HashMap usedStatements = new HashMap();
+	private static HashSet<Statement> usedStatements = new HashSet<Statement>();
 }

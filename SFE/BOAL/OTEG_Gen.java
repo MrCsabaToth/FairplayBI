@@ -35,7 +35,6 @@ public class OTEG_Gen {
         BigInteger pdq;
         BigInteger g;
         BigInteger C;
-        boolean found_gen;
 
         System.out.print(
             "Finding primes p (1024 bits) and q (160 bits) s.t. q|(p-1)...");
@@ -75,7 +74,8 @@ public class OTEG_Gen {
      * A main program for activating the ElGamalKeyPairGenerator.
      */
     public static void main(String[] args) {
-        OTEG_Gen key = null;
+        @SuppressWarnings("unused")
+		OTEG_Gen key = null;
 
         key = new OTEG_Gen();
     }

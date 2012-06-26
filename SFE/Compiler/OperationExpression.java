@@ -134,7 +134,7 @@ public abstract class OperationExpression extends Expression
 	     * This method is used in the second phase of the optimization.
 	      * @return an array of the input LvalExpressions of this gate.
 	     */
-	public abstract Vector getLvalExpressionInputs();
+	public abstract Vector<LvalExpression> getLvalExpressionInputs();
 
 	/**
 	     * Returns true if the output of this operation is constant

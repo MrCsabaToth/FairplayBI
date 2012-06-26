@@ -21,7 +21,7 @@ interface Optimize {
 	/**
 	 * Execute optimization's phase II on this object
 	 */
-	public void optimizePhaseII(Vector newBody);
+	public void optimizePhaseII(Vector<Statement> newBody);
 
 	/**
 	 * uses this object to build a list of statements needed to calculate

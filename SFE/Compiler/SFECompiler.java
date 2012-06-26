@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 
 import java.text.ParseException;
 
@@ -123,9 +124,9 @@ public class SFECompiler {
 	 * @throws IOException - if an I/O error occurs.
 	 * @throws ParseException - if a parsing error occurs.
 	 */
-	private int compileConstValue() throws ParseException, IOException {
-		int  val          = 0;
-		int  tmp;
+	private BigInteger compileConstValue() throws ParseException, IOException {
+		BigInteger val = BigInteger.ZERO;
+		BigInteger tmp;
 		char lastOperator = '+';
 
 		do {
@@ -139,7 +140,7 @@ public class SFECompiler {
 					break;
 
 				case Tokenizer.INT_CONST:
-					tmp = tokenizer.intVal();
+					tmp = BigInteger.valueOf((long)tokenizer.numberVal());
 
 					break;
 
@@ -151,12 +152,12 @@ public class SFECompiler {
 
 			switch (lastOperator) {
 				case '+':
-					val += tmp;
+					val = val.add(tmp);
 
 					break;
 
 				case '-':
-					val -= tmp;
+					val = val.subtract(tmp);
 
 					break;
 			}
@@ -357,7 +358,7 @@ public class SFECompiler {
 				getSymbol('<', "< is excepted after Int");
 				advance("Program not ended");
 
-				int bits = compileConstValue(); //compileBits();
+				BigInteger bits = compileConstValue(); //compileBits();
 
 				if ((tokenizer.tokenType() != Tokenizer.SYMBOL) ||
 					    (tokenizer.symbol() != '>')) {
@@ -366,7 +367,7 @@ public class SFECompiler {
 				}
 
 				advance("Program not ended");
-				type = new IntType(bits);
+				type = new IntType(bits.intValue());
 
 				break;
 
@@ -402,11 +403,11 @@ public class SFECompiler {
 				// {
 				getSymbol('{', "{ is excepted after StructType");
 
-				int index = 0;
+				BigInteger index = BigInteger.ZERO;
 				advance("Program not ended");
 
 				while ((tokenizer.tokenType() != Tokenizer.SYMBOL) ||
-					       ! ((tokenizer.symbol() == '}') && (index > 0))) {
+					       ! ((tokenizer.symbol() == '}') && (index.compareTo(BigInteger.ZERO) == 1))) {
 					if (tokenizer.tokenType() != Tokenizer.IDENTIFIER) {
 						throw new ParseException("identifier is excepted in enum",
 						                         tokenizer.lineNumber());
@@ -414,7 +415,7 @@ public class SFECompiler {
 
 					// <const-value>
 					Consts.defineName(tokenizer.getIdentifier(), index);
-					index++;
+					index = index.add(BigInteger.ONE);
 					advance("Program not ended");
 
 					if ((tokenizer.tokenType() != Tokenizer.SYMBOL) ||
@@ -430,7 +431,7 @@ public class SFECompiler {
 				}
 
 				//calculate number of bits, +1 for rounding
-				type = new IntType((int) (IntConstant.log2(index) + 1));
+				type = new IntType(index.bitLength() + 1);
 				advance("Program not ended");
 
 				break;
@@ -458,7 +459,7 @@ public class SFECompiler {
 			       (tokenizer.symbol() == '[')) {
 			advance("program not ended");
 
-			int length = compileConstValue();
+			int length = compileConstValue().intValue();
 
 			base = new ArrayType(base, length);
 
@@ -699,8 +700,8 @@ public class SFECompiler {
 			case Tokenizer.IDENTIFIER:
 
 				//Assignment statement
-				Vector expressions = new Vector();
-				Vector lengths = new Vector();
+				Vector<Expression> expressions = new Vector<Expression>();
+				Vector<Integer> lengths = new Vector<Integer>();
 
 				// <var-name>
 				statement = new BlockStatement();
@@ -807,18 +808,19 @@ public class SFECompiler {
 	 * @param rhs right side expression
 	 * @return Statement data structure that holds statement
 	 */
-	private Statement arrayStatment(String varName, Vector expressions,
-	                                Vector lengths, OperationExpression rhs) {
+	private Statement arrayStatment(String varName, Vector<Expression> expressions,
+	                                Vector<Integer> lengths, OperationExpression rhs) {
 		int[] indexes = new int[lengths.size()];
 
 		for (int i = 0; i < lengths.size(); i++)
 			indexes[i] = 0;
 
-		BlockStatement statement      = new BlockStatement();
-		String[]       varNameSplited = varName.split("\\$");
+		BlockStatement statement = new BlockStatement();
+		String[] varNameSplited = varName.split("\\$");
 
-		int            lengthOfLast =
-			((Integer) lengths.elementAt(lengths.size() - 1)).intValue();
+		@SuppressWarnings("unused")
+		int lengthOfLast =
+			lengths.elementAt(lengths.size() - 1);
 
 		do {
 			String str = new String();
@@ -832,14 +834,14 @@ public class SFECompiler {
 
 			BinaryOpExpression op =
 				new BinaryOpExpression(new EqualOperator(),
-				                       new IntConstant(indexes[0]),
-				                       (Expression) expressions.elementAt(0));
+				                       new IntConstant(BigInteger.valueOf(indexes[0])),
+				                       expressions.elementAt(0));
 
 			for (int i = 1; i < indexes.length; i++) {
 				BinaryOpExpression op2 =
 					new BinaryOpExpression(new EqualOperator(),
-					                       new IntConstant(indexes[i]),
-					                       (Expression) expressions.elementAt(i));
+					                       new IntConstant(BigInteger.valueOf(indexes[i])),
+					                       expressions.elementAt(i));
 				op = new BinaryOpExpression(new PrimitiveOperator(PrimitiveOperator.AND_OP),
 					                        op, op2);
 			}
@@ -859,12 +861,12 @@ public class SFECompiler {
 	 * @param lengths limit of each index in the array
 	 * @return true if all indeces get to the limit.
 	 */
-	private boolean advanceIndexes(int[] indexes, Vector lengths) {
+	private boolean advanceIndexes(int[] indexes, Vector<Integer> lengths) {
 		int i = indexes.length - 1;
 
 		while (i >= 0) {
 			indexes[i] =
-				(indexes[i] + 1) % ((Integer) lengths.elementAt(i)).intValue();
+				(indexes[i] + 1) % lengths.elementAt(i);
 
 			if (indexes[i] == 0) {
 				i--;
@@ -892,10 +894,10 @@ public class SFECompiler {
 		getNextToken(Tokenizer.IDENTIFIER, "identifier is excepted after (");
 
 		// <var-name>
-		Vector         expressions = new Vector();
-		Vector         lengths = new Vector();
-		BlockStatement block   = new BlockStatement();
-		String         varName = compileLHS(null, expressions, lengths, block);
+		Vector<Expression> expressions = new Vector<Expression>();
+		Vector<Integer> lengths = new Vector<Integer>();
+		BlockStatement block = new BlockStatement();
+		String varName = compileLHS(null, expressions, lengths, block);
 
 		// =
 		if ((tokenizer.tokenType() != Tokenizer.SYMBOL) ||
@@ -907,7 +909,7 @@ public class SFECompiler {
 		advance("program not ended");
 
 		//<from-value>
-		int from = compileConstValue();
+		int from = compileConstValue().intValue();
 
 		// to
 		if ((tokenizer.tokenType() != Tokenizer.KEYWORD) ||
@@ -918,7 +920,7 @@ public class SFECompiler {
 		advance("program not ended");
 
 		//<to-value>
-		int to = compileConstValue();
+		int to = compileConstValue().intValue();
 
 		// )
 		if ((tokenizer.tokenType() != Tokenizer.SYMBOL) ||
@@ -936,11 +938,11 @@ public class SFECompiler {
 			if (expressions.isEmpty()) {
 				block.addStatement(new AssignmentStatement(Function.getVar(varName),
 				                                           new UnaryOpExpression(new PrimitiveOperator(PrimitiveOperator.ID_OP),
-				                                                                 new IntConstant(from))));
+				                                                                 new IntConstant(BigInteger.valueOf(from)))));
 			} else {
 				block.addStatement(arrayStatment(varName, expressions, lengths,
 				                                 new UnaryOpExpression(new PrimitiveOperator(PrimitiveOperator.ID_OP),
-				                                                       new IntConstant(from))));
+				                                                       new IntConstant(BigInteger.valueOf(from)))));
 			}
 
 			block.addStatement(forBlock.duplicate());
@@ -1041,13 +1043,13 @@ public class SFECompiler {
 
 						LvalExpression lval =
 							Function.getVar("tmp" + labelIndex);
-						int            len =
+						int len =
 							((ArrayType) Function.getVar(varName).getType()).getLength();
 
 						for (int i = 0; i < len; i++) {
 							BinaryOpExpression condition =
 								new BinaryOpExpression(new EqualOperator(),
-								                       new IntConstant(i),
+								                       new IntConstant(BigInteger.valueOf(i)),
 								                       index.duplicate());
 							AssignmentStatement ifBody =
 								new AssignmentStatement(lval,
@@ -1098,8 +1100,8 @@ public class SFECompiler {
 	 * @throws IOException - if an I/O error occurs.
 	 * @throws ParseException - if a parsing error occurs.
 	 */
-	private String compileLHS(String varName, Vector expressions,
-	                          Vector lengths, BlockStatement block)
+	private String compileLHS(String varName, Vector<Expression> expressions,
+	                          Vector<Integer> lengths, BlockStatement block)
 	                   throws ParseException, IOException
 	{
 		String fieldName = tokenizer.getIdentifier();
@@ -1178,8 +1180,8 @@ public class SFECompiler {
 		Expression exp = null;
 
 		try {
-			Stack operators = new Stack();
-			Stack operands = new Stack();
+			Stack<Operator> operators = new Stack<Operator>();
+			Stack<Expression> operands = new Stack<Expression>();
 
 			do {
 				while (tokenizer.tokenType() == Tokenizer.SYMBOL) {
@@ -1265,7 +1267,7 @@ public class SFECompiler {
 			while (! operators.empty())
 				updateStacks(operators, operands);
 
-			exp = (Expression) operands.pop();
+			exp = operands.pop();
 
 			if (! operands.empty()) {
 				throw new ParseException("Error in expression, not enougth operators",
@@ -1325,11 +1327,11 @@ public class SFECompiler {
 				int      i = 0;
 
 				//adding arguments assigning statements
-				for (Enumeration e = calledFunc.getArguments().elements();
+				for (Enumeration<LvalExpression> e = calledFunc.getArguments().elements();
 					     e.hasMoreElements() &&
 					     ! ((tokenizer.tokenType() == Tokenizer.SYMBOL) &&
 					     (tokenizer.symbol() == ')')); i++) {
-					block.addStatement(new AssignmentStatement((LvalExpression) e.nextElement(),
+					block.addStatement(new AssignmentStatement(e.nextElement(),
 					                                           new UnaryOpExpression(new PrimitiveOperator(PrimitiveOperator.ID_OP),
 					                                                                 compileExpression(true,
 					                                                                                   block))));
@@ -1353,7 +1355,7 @@ public class SFECompiler {
 				break;
 
 			case Tokenizer.INT_CONST:
-				expression = new IntConstant(tokenizer.intVal());
+				expression = new IntConstant(BigInteger.valueOf((long)tokenizer.numberVal()));
 				advance("program not ended");
 
 				break;
@@ -1396,11 +1398,11 @@ public class SFECompiler {
 	 * @param operands stack of operands
 	 * @throws EmptyStackException if trying to pop from empty stack.
 	 */
-	private void updateStacks(Stack operators, Stack operands)
+	private void updateStacks(Stack<Operator> operators, Stack<Expression> operands)
 	                   throws EmptyStackException
 	{
-		Operator   operator = (Operator) operators.pop();
-		Expression operand = (Expression) operands.pop();
+		Operator   operator = operators.pop();
+		Expression operand = operands.pop();
 
 		//if unary operator
 		if ((operator instanceof UnaryMinusOperator) ||
@@ -1409,7 +1411,7 @@ public class SFECompiler {
 			operands.push(new UnaryOpExpression(operator, operand));
 		} else { //pop another operand for binary operator
 			operands.push(new BinaryOpExpression(operator,
-			                                     (Expression) operands.pop(),
+			                                     operands.pop(),
 			                                     operand));
 		}
 	}
@@ -1423,12 +1425,12 @@ public class SFECompiler {
 	 * @param operator operator
 	 * @throws EmptyStackException if trying to pop from empty stack.
 	 */
-	private void insertNewOperator(Stack operators, Stack operands,
+	private void insertNewOperator(Stack<Operator> operators, Stack<Expression> operands,
 	                               Operator operator)
 	                        throws EmptyStackException
 	{
 		while (! operators.empty() && (operators.peek() != null) &&
-			       (operator.priority() <= ((Operator) operators.peek()).priority()))
+			       (operator.priority() <= operators.peek().priority()))
 			updateStacks(operators, operands);
 
 		operators.push(operator);
@@ -1441,7 +1443,7 @@ public class SFECompiler {
 	 * @throws IOException - if an I/O error occurs.
 	 * @throws ParseException - if a parsing error occurs.
 	 */
-	private void compileOperator(Stack operators, Stack operands)
+	private void compileOperator(Stack<Operator> operators, Stack<Expression> operands)
 	                      throws ParseException, IOException
 	{
 		boolean getNextToken = true;
@@ -1597,8 +1599,6 @@ public class SFECompiler {
 	 * A test program
 	 */
 	public static void main(String[] args) throws IOException {
-		Program program = null;
-
 		if ((args.length != 1) &&
 			    ((args.length != 2) || ! args[0].equals("-no-opt"))) {
 			System.err.println("Usage: java SFECompiler [-no-opt] <file>");

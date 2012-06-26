@@ -22,7 +22,7 @@ public class Program {
 
 	public Program(String name) {
 		this.name     = name;
-		functions     = new Vector();
+		functions     = new Vector<Function>();
 		resetCounter();
 	}
 
@@ -177,7 +177,7 @@ public class Program {
 	/*
 	 * Holds the functions defined in the program
 	 */
-	private static Vector functions;
+	private static Vector<Function> functions;
 
 	/**
 	 * Hold a refernece to the output function

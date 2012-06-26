@@ -272,15 +272,15 @@ public class BinaryOpExpression extends OperationExpression {
 	 * This method is used in the second phase of the optimization.
 	 * @return an array of the input LvalExpressions of this gate.
 	 */
-	public Vector getLvalExpressionInputs() {
-		Vector result = new Vector();
+	public Vector<LvalExpression> getLvalExpressionInputs() {
+		Vector<LvalExpression> result = new Vector<LvalExpression>();
 
 		if (left instanceof LvalExpression) {
-			result.add(left);
+			result.add((LvalExpression)left);
 		}
 
 		if (right instanceof LvalExpression) {
-			result.add(right);
+			result.add((LvalExpression)right);
 		}
 
 		return result;
@@ -366,7 +366,6 @@ public class BinaryOpExpression extends OperationExpression {
 	public OperationExpression combineSharedInput() {
 		BinaryOpExpression lowerGate;
 		PrimitiveOperator  gateOp;
-		PrimitiveOperator  newOp;
 
 		if (left.hasSharedInput(right)) {
 			lowerGate =

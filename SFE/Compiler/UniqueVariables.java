@@ -21,12 +21,12 @@ public class UniqueVariables {
 	/*
 	 * link list of hashes holding variables
 	 */
-	private LinkedList vars;
+	private LinkedList<HashMap<String,LvalExpression>> vars;
 
 	/*
 	 * Holds refrences to parameters of this function.
 	 */
-	private Vector parameters;
+	private Vector<LvalExpression> parameters;
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -34,9 +34,9 @@ public class UniqueVariables {
 	 * Constructor
 	 */
 	UniqueVariables() {
-		parameters     = new Vector();
-		vars           = new LinkedList();
-		vars.addFirst(new HashMap());
+		parameters     = new Vector<LvalExpression>();
+		vars           = new LinkedList<HashMap<String,LvalExpression>>();
+		vars.addFirst(new HashMap<String,LvalExpression>());
 	}
 
 	//~ Methods ----------------------------------------------------------------
@@ -45,23 +45,23 @@ public class UniqueVariables {
 	 * Adds a new scope (= new hash table in linked list)
 	 */
 	public void pushScope() {
-		vars.addFirst(new HashMap());
+		vars.addFirst(new HashMap<String,LvalExpression>());
 	}
 
 	/**
 	 * Removes the current scope (= hash table in head of linked list)
 	 * @return HashMap the current poped scope
 	 */
-	public HashMap popScope() {
-		return (HashMap) vars.removeFirst();
+	public HashMap<String,LvalExpression> popScope() {
+		return vars.removeFirst();
 	}
 
 	/**
 	 * Returns all vars in current scope
 	 * @return Set all vars in current scope
 	 */
-	public Set enumScope() {
-		return ((HashMap) vars.getFirst()).keySet();
+	public Set<String> enumScope() {
+		return vars.getFirst().keySet();
 	}
 
 	/*
@@ -76,10 +76,10 @@ public class UniqueVariables {
 		// create the lavlue of the given parameter type and name.
 		Lvalue lvalue = new VarLvalue(new Variable(name, type), isOutput);
 
-		Vector derivedLvalues = lvalue.getDerivedLvalues();
+		Vector<Lvalue> derivedLvalues = lvalue.getDerivedLvalues();
 
 		for (int i = 0; i < derivedLvalues.size(); i++)
-			add((Lvalue) (derivedLvalues.elementAt(i)), isParameter);
+			add(derivedLvalues.elementAt(i), isParameter);
 	}
 
 	/*
@@ -93,7 +93,7 @@ public class UniqueVariables {
 		LvalExpression lvalExp = new LvalExpression(lval);
 
 		// add to local vars - current scope
-		((HashMap) vars.getFirst()).put(name, lvalExp);
+		vars.getFirst().put(name, lvalExp);
 
 		// add to parameters - if needed
 		if (isParameter &&
@@ -108,13 +108,13 @@ public class UniqueVariables {
 	 * @return LvalExpression the reference of the variable
 	 */
 	public LvalExpression getVar(String name) {
-		ListIterator iterator = vars.listIterator(0);
+		ListIterator<HashMap<String,LvalExpression>> iterator = vars.listIterator(0);
 
 		while (iterator.hasNext()) {
-			HashMap scope = (HashMap) (iterator.next());
+			HashMap<String,LvalExpression> scope = iterator.next();
 
 			if (scope.containsKey(name)) {
-				return (LvalExpression) scope.get(name);
+				return scope.get(name);
 			}
 		}
 
@@ -130,21 +130,21 @@ public class UniqueVariables {
 		String oldName;
 
 		// hold old params and locals
-		Vector  oldParameters = parameters;
-		HashMap oldVars = popScope();
+		Vector<LvalExpression> oldParameters = parameters;
+		HashMap<String,LvalExpression> oldVars = popScope();
 
 		// create new params vector and loacls scope
-		parameters = new Vector();
+		parameters = new Vector<LvalExpression>();
 		pushScope();
 
-		Set      set = oldVars.keySet();
-		Iterator It = set.iterator();
+		Set<String> set = oldVars.keySet();
+		Iterator<String> It = set.iterator();
 
 		while (It.hasNext()) {
-			oldName     = (String) (It.next());
+			oldName = It.next();
 
 			// get the old LvalExpression's Lvalue
-			oldLvalue = ((LvalExpression) (oldVars.get(oldName))).getLvalue();
+			oldLvalue = oldVars.get(oldName).getLvalue();
 
 			if (oldLvalue.hasDerives()) {
 				continue;
@@ -165,7 +165,7 @@ public class UniqueVariables {
 	/*
 	 * Returns the vector of the parametes.
 	 */
-	public Vector getParameters() {
+	public Vector<LvalExpression> getParameters() {
 		return parameters;
 	}
 }

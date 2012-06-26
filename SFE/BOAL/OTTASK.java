@@ -10,7 +10,7 @@ class OTTASK {
     int ot_id;
     int total;
     int selected;
-    Vector elements_values = new Vector(10, 10);
+    Vector<byte[]> elements_values = new Vector<byte[]>(10, 10);
     byte[] transferred_value = null;
 
     public OTTASK(int ot_id, int total, int selected) {

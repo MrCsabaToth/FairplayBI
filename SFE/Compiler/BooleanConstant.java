@@ -5,6 +5,7 @@
 package SFE.Compiler;
 
 import java.io.PrintWriter;
+import java.math.BigInteger;
 
 
 /**
@@ -55,8 +56,8 @@ public class BooleanConstant extends ConstExpression implements OutputWriter {
 	 * Returns the value stored in this BooleanConstant (0 or 1)
 	 * @return the value stored in this BooleanConstant (0 or 1)
 	 */
-	public int value() {
-		return (booleanConst) ? 1 : 0;
+	public BigInteger value() {
+		return (booleanConst) ? BigInteger.ONE : BigInteger.ZERO;
 	}
 
 	/**

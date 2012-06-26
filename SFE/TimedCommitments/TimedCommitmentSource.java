@@ -27,8 +27,8 @@ class TimedCommitmentSource {
 	private final BigInteger g;
 	private final BitSet     data;
 	private final BitSet     S;
-	private final Vector     W;
-	private final Vector     hints;
+	private final Vector<BigInteger> W;
+	private final Vector<TimedCommitmentHint> hints;
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -66,7 +66,7 @@ class TimedCommitmentSource {
 	public TimedCommitmentHint generateHint(int i) {
 		assert (1 <= i) && (i <= k);
 
-		TimedCommitmentHint hint = (TimedCommitmentHint) hints.elementAt(i - 1);
+		TimedCommitmentHint hint = hints.elementAt(i - 1);
 		assert hint.index.intValue() == i;
 
 		return hint;
@@ -115,8 +115,8 @@ class TimedCommitmentSource {
 	/**
 	 * @return the vector W=[g^2, g^4, g^16, ..., g^(2^(2^k))], as per Boneh-Naor's algorithm
 	 */
-	private Vector calculateW() {
-		Vector result = new Vector();
+	private Vector<BigInteger> calculateW() {
+		Vector<BigInteger> result = new Vector<BigInteger>();
 
 		// when we start, power = 2 = 2^(2^0) [mod phiN]
 		BigInteger power = TWO;
@@ -129,13 +129,13 @@ class TimedCommitmentSource {
 		return result;
 	}
 
-	private Vector calculateHints() {
-		Vector result = new Vector();
+	private Vector<TimedCommitmentHint> calculateHints() {
+		Vector<TimedCommitmentHint> result = new Vector<TimedCommitmentHint>();
 
 		// The first hint is the one-before-last element of W.
 		// Note that it is already included in the first timed commitment.
 		final TimedCommitmentHint firstHint =
-			new TimedCommitmentHint(1, (BigInteger) W.elementAt(W.size() - 2));
+			new TimedCommitmentHint(1, W.elementAt(W.size() - 2));
 
 		result.addElement(firstHint);
 

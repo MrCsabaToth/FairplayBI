@@ -30,7 +30,7 @@ public abstract class Type {
 	 * such type defined for this type name.
 	 */
 	public static Type fromName(String typeName) {
-		return (Type) (typeTable.get(typeName));
+		return typeTable.get(typeName);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public abstract class Type {
 	 * in the vector must overide this method.
 	 * @param base the lavalue that call the this method (base.type == this)
 	 */
-	public Vector getDerivedLvalues(Lvalue base) {
-		Vector result = new Vector();
+	public Vector<Lvalue> getDerivedLvalues(Lvalue base) {
+		Vector<Lvalue> result = new Vector<Lvalue>();
 		result.add(base);
 
 		return result;
@@ -84,5 +84,5 @@ public abstract class Type {
 	/*
 	 * holds the types defined in the program.
 	 */
-	private static HashMap typeTable = new HashMap();
+	private static HashMap<String,Type> typeTable = new HashMap<String,Type>();
 }

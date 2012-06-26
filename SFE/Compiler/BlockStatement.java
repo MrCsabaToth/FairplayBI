@@ -21,7 +21,7 @@ public class BlockStatement extends Statement implements OutputWriter, Optimize 
 	/*
 	 * Holds the statements defined in the block.
 	 */
-	private Vector statementsVector;
+	private Vector<Statement> statementsVector;
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -29,7 +29,7 @@ public class BlockStatement extends Statement implements OutputWriter, Optimize 
 	 * Constructs a new BlockStatement.
 	 */
 	public BlockStatement() {
-		statementsVector = new Vector();
+		statementsVector = new Vector<Statement>();
 	}
 
 	//~ Methods ----------------------------------------------------------------
@@ -46,7 +46,7 @@ public class BlockStatement extends Statement implements OutputWriter, Optimize 
 	 * adds a given vector of statements into the block.
 	 * @param v the given vector of statements.
 	 */
-	void addStatements(Vector v) {
+	void addStatements(Vector<Statement> v) {
 		statementsVector.addAll(v);
 	}
 
@@ -118,7 +118,7 @@ public class BlockStatement extends Statement implements OutputWriter, Optimize 
 	 * executes optimizePhaseII() on each of the statements in
 	 * this BlockStatement.
 	 */
-	public void optimizePhaseII(Vector newBody) {
+	public void optimizePhaseII(Vector<Statement> newBody) {
 		for (int i = 0; i < statementsVector.size(); i++) {
 			Optimize s = ((Optimize) (statementsVector.elementAt(i)));
 			s.optimizePhaseII(newBody);

@@ -4,6 +4,8 @@
 
 package SFE.Compiler;
 
+import java.math.BigInteger;
+
 
 /**
  *
@@ -52,7 +54,7 @@ class UnaryMinusOperator extends Operator implements Multi2SingleBit {
 			                        
 			// rhs
 			new BinaryOpExpression(new PlusOperator(), notMid,
-			                       new IntConstant(1)));
+			                       new IntConstant(BigInteger.ONE)));
 
 		// now add the above statement to the result
 		result.addStatement(plusOneAs.multi2SingleBit(null));

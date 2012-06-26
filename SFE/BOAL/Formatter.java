@@ -5,6 +5,7 @@
 package SFE.BOAL;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
 import org.apache.log4j.*;
 
@@ -59,14 +60,16 @@ off of output wires 100,101,102; likewise is Bob's output.
  * @author  : Dahlia Malkhi and Yaron Sella
  */
 public class Formatter implements Serializable {
-    private static final Logger logger = Logger.getLogger(Formatter.class);
+	private static final long serialVersionUID = 7755453784445270903L;
+
+	private static final Logger logger = Logger.getLogger(Formatter.class);
     protected static final int EOF_INDICATOR = -2; // Input file ended
     protected static final int WORD_INDICATOR = -1; // Token read was a WORD
     protected StreamTokenizer st;
     protected String s = null; // Stores WORD tokens
     protected boolean is_alice_line = false; // indicates Alice/Bob line
-    protected  IO curIO = null; // IO object for current line
-    protected Vector FMT = new Vector(10, 10); // keeps all IO information
+    protected IO curIO = null; // IO object for current line
+    protected Vector<IO> FMT = new Vector<IO>(10, 10); // keeps all IO information
 
     public Formatter(StreamTokenizer st) {
         this.st = st;
@@ -97,7 +100,7 @@ public class Formatter implements Serializable {
         // scan through all format object for input objects
         for (int i = 0; i < FMT.size(); i++) {
 
-            IO io = (IO) FMT.elementAt(i);
+            IO io = FMT.elementAt(i);
 
             // mark all input/output wires
             for (int j = 0; j < io.getNLines(); j++) {
@@ -106,8 +109,8 @@ public class Formatter implements Serializable {
                 g.markAliceBob (io.isAlice());
                 if (g.isBobInput())  tsize[0] += g.gmeasureInpPayload();
                 if (g.isBobOutput()) tsize[1] += g.gmeasureOutPayload();
-	    }
-	}
+		    }
+		}
     }
 
     //---------------------------------------------------------------
@@ -135,10 +138,10 @@ public class Formatter implements Serializable {
 
         // Scan through all format objects 
         for (int i = 0; i < FMT.size(); i++) {
-            io = (IO) FMT.elementAt(i);
+            io = FMT.elementAt(i);
             logger.debug("pulled element from FMT");
 
-	   // Verify it's an input object of the approriate player (i.e., Alice/Bob).
+            // Verify it's an input object of the approriate player (i.e., Alice/Bob).
             if ((!io.isInput()) || (is_alice != io.isAlice())) {
                 continue;
             }
@@ -155,14 +158,14 @@ public class Formatter implements Serializable {
             }
 
             StringTokenizer st = new StringTokenizer(inpline);
-            int val = Integer.parseInt(st.nextToken());
+            BigInteger val = new BigInteger(st.nextToken());
 
             logger.debug("input is: " + val);
 
             // set all specified input bits, one by one
             for (int j = 0; j < io.getNLines(); j++) {
                 // this is the j'th bit value
-                int b = (val >> j) & 1;
+                int b = val.testBit(j) ? 1 : 0;
 
                 // this bit should store as input at line_num
                 int line_num = io.getLinenum(j);
@@ -199,20 +202,20 @@ public class Formatter implements Serializable {
      */
     public void getOutput(Circuit c, boolean is_alice) {
         int bit;
-        int value;
+        BigInteger value = new BigInteger("0");
         IO io = null;
 
         // Scan through all format objects 
         for (int i = 0; i < FMT.size(); i++) {
-            io = (IO) FMT.elementAt(i);
+            io = FMT.elementAt(i);
 
-	    // Verify it's an output object of the approriate player (i.e., Alice/Bob).
+            // Verify it's an output object of the approriate player (i.e., Alice/Bob).
             if (io.isInput() || (is_alice != io.isAlice())) {
                 continue;
             }
 
             // collect all specified output bits, one by one
-            for (int j = value = 0; j < io.getNLines(); j++) {
+            for (int j = 0; j < io.getNLines(); j++) {
                 // this bit belongs to output of j'th line_num
                 int line_num = io.getLinenum(j);
 
@@ -220,7 +223,8 @@ public class Formatter implements Serializable {
                 bit = c.getGate(line_num).getValue();
                 logger.debug("output bit " + line_num + " is: " + bit);
 
-                value |= (bit << j);
+                if (bit > 0)
+                	value = value.setBit(j);
             }
 
             System.out.println(io.getPrefix() + value);
@@ -244,7 +248,7 @@ public class Formatter implements Serializable {
         byte[] big_byte_arr = new byte[total_size];
 
         for (i = 0; i < FMT.size(); i++) {
-            IO io = (IO) FMT.elementAt(i);
+            IO io = FMT.elementAt(i);
 
             // Verify it's a relevant i/o object
             if (!io.isInput()) continue;
@@ -279,7 +283,7 @@ public class Formatter implements Serializable {
         int i, j, k, line_num, consumed_bytes ;
 
         for (i = k = 0; i < FMT.size(); i++) {
-            IO io = (IO) FMT.elementAt(i);
+            IO io = FMT.elementAt(i);
 
             // Verify it's a relevant i/o object
             if (!io.isInput()) continue;
@@ -314,7 +318,7 @@ public class Formatter implements Serializable {
         byte[] big_byte_arr = new byte[total_size];
 
         for (i = 0; i < FMT.size(); i++) {
-            IO io = (IO) FMT.elementAt(i);
+            IO io = FMT.elementAt(i);
 
             // Verify it's a relevant i/o object
             if (io.isInput()) continue;
@@ -349,7 +353,7 @@ public class Formatter implements Serializable {
         int i, j, k, line_num, consumed_bytes ;
 
         for (i = k = 0; i < FMT.size(); i++) {
-            IO io = (IO) FMT.elementAt(i);
+            IO io = FMT.elementAt(i);
 
             // Verify it's a relevant i/o object
             if (io.isInput()) continue;

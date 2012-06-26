@@ -20,12 +20,15 @@ public class TimedCommitment {
 
 	// data members
 	private final BigInteger    N;
+	@SuppressWarnings("unused")
 	private final BigInteger    g;
+	@SuppressWarnings("unused")
 	private final int           n;
 	private final int           k;
-	private final Vector        W;
+	@SuppressWarnings("unused")
+	private final Vector<BigInteger> W;
 	private final BitSet        S;
-	private java.util.SortedSet hints = new java.util.TreeSet();
+	private java.util.SortedSet<TimedCommitmentHint> hints = new java.util.TreeSet<TimedCommitmentHint>();
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -41,7 +44,7 @@ public class TimedCommitment {
 	 * @param W as per Boneh-Naor's algorithm: [g^2, g^4, g^16, ..., g^ (2^(2^k))]
 	 * @param S the encrypted message, as per Boneh-Naor's algorithm
 	 */
-	public TimedCommitment(BigInteger N, BigInteger g, int n, int k, Vector W,
+	public TimedCommitment(BigInteger N, BigInteger g, int n, int k, Vector<BigInteger> W,
 	                       BitSet S) {
 		this.N     = N;
 		this.g     = g;
@@ -51,7 +54,7 @@ public class TimedCommitment {
 		this.S     = S;
 
 		// The one-before-last element in W is the first hint
-		final BigInteger hintValue = (BigInteger) W.elementAt(W.size() - 2);
+		final BigInteger hintValue = W.elementAt(W.size() - 2);
 		addHint(new TimedCommitmentHint(1, hintValue));
 	}
 
@@ -94,6 +97,7 @@ public class TimedCommitment {
 	 */
 	private BitSet generateKey() {
 		final BigInteger V = calculateV();
+		@SuppressWarnings("unused")
 		final int        B = TimedCommitmentConstants.B;
 
 		// The key, same length as the encrypted message
@@ -145,7 +149,7 @@ public class TimedCommitment {
 	private TimedCommitmentHint getBestHint() {
 		assert ! hints.isEmpty();
 
-		return (TimedCommitmentHint) hints.last();
+		return hints.last();
 	}
 
 	//~ Static fields/initializers ---------------------------------------------

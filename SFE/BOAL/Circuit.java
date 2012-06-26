@@ -63,7 +63,7 @@ U(in,vn))
 public class Circuit implements Serializable {
 	private static final long serialVersionUID = -2450654631500631967L;
 	private static final Logger logger = Logger.getLogger(Circuit.class);
-	protected Vector circuit = new Vector(1000, 1000);
+	protected Vector<Gate> circuit = new Vector<Gate>(1000, 1000);
 
 	//---------------------------------------------------------------
 
@@ -94,7 +94,7 @@ public class Circuit implements Serializable {
 		assert ((gate_num >= 0) && (gate_num < circuit.size())) : "getGate: bad gate_num = " +
 		gate_num;
 
-		return (Gate) circuit.elementAt(gate_num);
+		return circuit.elementAt(gate_num);
 	}
 
 	//---------------------------------------------------------------

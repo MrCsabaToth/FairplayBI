@@ -189,7 +189,7 @@ public class AssignmentStatement extends Statement implements OutputWriter,
 	 * was assembled in earlier stage ).
 	 * @param newBody the new function-body.
 	 */
-	public void optimizePhaseII(Vector newBody) {
+	public void optimizePhaseII(Vector<Statement> newBody) {
 		if (Optimizer.isUsed(this)) {
 			newBody.add(this);
 		}
@@ -207,11 +207,11 @@ public class AssignmentStatement extends Statement implements OutputWriter,
 		}
 
 		if (Optimizer.isUsed(this)) {
-			Vector v = rhs.getLvalExpressionInputs();
+			Vector<LvalExpression> v = rhs.getLvalExpressionInputs();
 
 			for (int i = 0; i < v.size(); i++) {
 				Statement as =
-					((LvalExpression) (v.elementAt(i))).getAssigningStatement();
+					(v.elementAt(i)).getAssigningStatement();
 				Optimizer.putUsedStatement(as);
 			}
 		}

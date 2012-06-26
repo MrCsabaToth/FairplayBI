@@ -92,7 +92,7 @@ public class InputStatement extends Statement implements OutputWriter, Optimize 
 	/**
 	 * Optimizes the InputStatement - phase II
 	 */
-	public void optimizePhaseII(Vector newBody) {
+	public void optimizePhaseII(Vector<Statement> newBody) {
 		newBody.add(this);
 	}
 
@@ -117,28 +117,28 @@ public class InputStatement extends Statement implements OutputWriter, Optimize 
 
 		// the input vector goes into the OutputWriter for writing the
 		// format file at the end.
-		Vector inputVector = new Vector();
+		InputFormat inputFormat = new InputFormat();
 
 		// first player's name of this input
 		if (inputName.startsWith("output$input.alice")) {
-			inputVector.add("Alice");
+			inputFormat.setPartyName("Alice");
 		} else {
-			inputVector.add("Bob");
+			inputFormat.setPartyName("Bob");
 		}
 
 		// remove the "output$" prefix and add to the vector
-		inputVector.add(inputName.substring(7));
+		inputFormat.setIntegerStr(inputName.substring(7));
 
 		for (int i = 0; i < input.size(); i++) {
 			InputStatement is =
 				new InputStatement(input.lvalBitAt(i) //Function.getVar(inputName+"$"+i)
 				);
 			result.addStatement(is);
-			inputVector.add(is);
+			inputFormat.addInputStatement(is);
 		}
 
-		// add the format vector of this input statement to the outputwriter
-		OutputWriter.inputFormat.add(inputVector);
+		// add the input format to the outputwriter
+		OutputWriter.inputFormat.add(inputFormat);
 
 		return result;
 	}

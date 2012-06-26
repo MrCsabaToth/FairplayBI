@@ -20,8 +20,8 @@ public class StructType extends ParentType {
 	/*
 	 * Holds the fields of this struct
 	 */
-	private Vector fieldsName;
-	private Vector fieldsType;
+	private Vector<String> fieldsName;
+	private Vector<Type> fieldsType;
 
 	/*
 	 * Holds the size of this StructType
@@ -35,8 +35,8 @@ public class StructType extends ParentType {
 	 */
 	public StructType() {
 		size           = 0;
-		fieldsName     = new Vector();
-		fieldsType     = new Vector();
+		fieldsName     = new Vector<String>();
+		fieldsType     = new Vector<Type>();
 	}
 
 	//~ Methods ----------------------------------------------------------------
@@ -78,8 +78,8 @@ public class StructType extends ParentType {
 	 */
 	public Type fromFieldName(String fieldName) {
 		for (int i = 0; i < fieldsName.size(); i++)
-			if (((String) fieldsName.elementAt(i)).equals(fieldName)) {
-				return (Type) (fieldsType.elementAt(i));
+			if (fieldsName.elementAt(i).equals(fieldName)) {
+				return fieldsType.elementAt(i);
 			}
 
 		return null;
@@ -93,8 +93,8 @@ public class StructType extends ParentType {
 		String str = new String();
 
 		for (int f = 0; f < fieldsName.size(); f++) {
-			String name = (String) fieldsName.elementAt(f);
-			Type   type = (Type) fieldsType.elementAt(f);
+			String name = fieldsName.elementAt(f);
+			Type   type = fieldsType.elementAt(f);
 
 			if (type instanceof StructType) {
 				str += ((StructType) type).toFormat(parentName + "." + name,
@@ -137,7 +137,7 @@ public class StructType extends ParentType {
 	 * Returns a Set with all this struct's field names.
 	 * @return a Set with all this struct's field names.
 	 */
-	public Vector getFields() {
+	public Vector<String> getFields() {
 		return fieldsName;
 	}
 
@@ -155,8 +155,8 @@ public class StructType extends ParentType {
 	 */
 	public String getNameAt(String baseName, int i) {
 		for (int f = 0; f < fieldsName.size(); f++) {
-			String name = (String) fieldsName.elementAt(f);
-			Type   type = (Type) fieldsType.elementAt(f);
+			String name = fieldsName.elementAt(f);
+			Type   type = fieldsType.elementAt(f);
 
 			// get to the next field
 			if ((type.size() <= i) && (f < (fieldsName.size() - 1))) {
@@ -188,15 +188,15 @@ public class StructType extends ParentType {
 	 * @param base the lavalue that call the this method (base.type == this)
 	 * @return Vector of all the lvalues
 	 */
-	public Vector getDerivedLvalues(Lvalue base) {
-		Vector result = new Vector();
+	public Vector<Lvalue> getDerivedLvalues(Lvalue base) {
+		Vector<Lvalue> result = new Vector<Lvalue>();
 		result.add(base);
 
 		for (int fieldIndex = 0; fieldIndex < fieldsName.size();
 			     fieldIndex++) {
 			// get field name and Type
-			String fieldName = (String) fieldsName.elementAt(fieldIndex);
-			Type   fieldType = (Type) fieldsType.elementAt(fieldIndex);
+			String fieldName = fieldsName.elementAt(fieldIndex);
+			Type   fieldType = fieldsType.elementAt(fieldIndex);
 
 			StructFieldLvalue structFieldLval =
 				new StructFieldLvalue(base, fieldName);

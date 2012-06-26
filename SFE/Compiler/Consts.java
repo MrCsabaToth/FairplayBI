@@ -4,6 +4,7 @@
 
 package SFE.Compiler;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 
 
@@ -20,7 +21,7 @@ public class Consts {
 	 * @return ConstExpression representing the const, or null if there was no such constant defined.
 	 */
 	public static ConstExpression fromName(String name) {
-		return ((ConstExpression) (constsTable.get(name)));
+		return constsTable.get(name);
 	}
 
 	/**
@@ -29,7 +30,7 @@ public class Consts {
 	 * @param constant the constant to be associated with the specified newConstName.
 	 * @throws IllegalArgumentException if the newConstName is already defined.
 	 */
-	public static void defineName(String newConstName, int constant)
+	public static void defineName(String newConstName, BigInteger constant)
 	                       throws IllegalArgumentException
 	{
 		if (constsTable.containsValue(newConstName)) {
@@ -63,7 +64,7 @@ public class Consts {
 	 */
 	public static int size(String name) {
 		if (constsTable.containsValue(name)) {
-			return ((ConstExpression) fromName(name)).size();
+			return fromName(name).size();
 		}
 
 		return -1;
@@ -76,5 +77,5 @@ public class Consts {
 	/*
 	 * holds the constants defined in the program.
 	 */
-	private static HashMap constsTable = new HashMap();
+	private static HashMap<String,ConstExpression> constsTable = new HashMap<String,ConstExpression>();
 }

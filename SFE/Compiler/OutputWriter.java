@@ -23,5 +23,5 @@ interface OutputWriter {
 
 	//~ Static fields/initializers ---------------------------------------------
 
-	static Vector inputFormat = new Vector();
+	static Vector<InputFormat> inputFormat = new Vector<InputFormat>();
 }

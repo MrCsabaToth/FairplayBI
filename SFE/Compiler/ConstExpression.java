@@ -4,6 +4,8 @@
 
 package SFE.Compiler;
 
+import java.math.BigInteger;
+
 
 /**
  * The ConstExpression class represents consts expressions that
@@ -16,5 +18,5 @@ public abstract class ConstExpression extends Expression {
 	 * Returns the value stored in this constant expression
 	 * @return the value stored in this constant expression
 	 */
-	public abstract int value();
+	public abstract BigInteger value();
 }

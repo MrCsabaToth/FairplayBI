@@ -4,6 +4,8 @@
 
 package SFE.Compiler;
 
+import java.math.BigInteger;
+
 
 /**
  * The IntConstant class represents integer consts expressions that can
@@ -17,7 +19,7 @@ public class IntConstant extends ConstExpression {
 	/*
 	 * Holds the integer constant of this IntConstant
 	 */
-	private int intConst;
+	private BigInteger intConst;
 
 	/*
 	 * Holds the number of bit needed to store this intConst (size)
@@ -30,32 +32,13 @@ public class IntConstant extends ConstExpression {
 	 * Constructs a new IntConstant from a given integer const
 	 * @param intConst the given integer constant
 	 */
-	public IntConstant(int intConst) {
+	public IntConstant(BigInteger intConst) {
 		this.intConst = intConst;
 
-		if (intConst == 0) {
-			size = 2;
-		} else {
-			double a = log2(Math.abs(intConst));
-			size = (int) a + 1; // +1 for representing the sign
-
-			if (a > (int) a) { // we need an extra bit to represent intConst
-				size++;
-			}
-		}
+		size = intConst.bitLength() + 1;
 	}
 
 	//~ Methods ----------------------------------------------------------------
-
-	/*
-	 * private method for calculation the binary logarithm (binary base)
-	 * of a double value
-	 * @param a number greater than 0.
-	 * @return log2 of a
-	 */
-	public static double log2(double a) {
-		return Math.log(a) / logE2;
-	}
 
 	/**
 	 * Returns the number of bits needed to represent this expression.
@@ -70,14 +53,14 @@ public class IntConstant extends ConstExpression {
 	 * @return a string representation of the object.
 	 */
 	public String toString() {
-		return Integer.toString(intConst);
+		return intConst.toString();
 	}
 
 	/**
 	 * Returns the value stored in this IntConstant
 	 * @return the value stored in this IntConstant
 	 */
-	public int value() {
+	public BigInteger value() {
 		return intConst;
 	}
 
@@ -86,20 +69,8 @@ public class IntConstant extends ConstExpression {
 	 * @return Expression that represents the bit at place i of this Expression
 	 */
 	public Expression bitAt(int i) {
-		if (size <= i) {
-			// sign expantion
-			return new BooleanConstant(intConst < 0); // return 1 (true) as sign expension 
-		}
-
-		boolean val = ((intConst >> i) & 1) == 1;
+		boolean val = intConst.testBit(i);
 
 		return new BooleanConstant(val);
 	}
-
-	//~ Static fields/initializers ---------------------------------------------
-
-	/*
-	 * holds the natural logarithm of 2
-	 */
-	private static double logE2 = Math.log(2);
 }

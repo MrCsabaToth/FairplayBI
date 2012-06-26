@@ -8,17 +8,7 @@ import org.apache.log4j.*;
 
 import java.io.*;
 
-import java.math.*;
-
 import java.net.*;
-
-import java.util.regex.*;
-
-import SFE.BOAL.*;
-
-import SFE.Compiler.*;
-
-import SFE.GUI.*;
 
 /** Dave
  *  @author: Dahlia Malkhi and Yaron Sella
@@ -48,7 +38,6 @@ public class Dave {
     public Dave (String args[]) throws IOException {
         ServerSocket SS = null;
         Socket sock = null;
-        ObjectInputStream fromCarol = null;
         ObjectOutputStream toCarol = null;
         int mess_len = Integer.parseInt(args[0]);
         int num_iterations = Integer.parseInt (args[1]);
@@ -109,7 +98,7 @@ public class Dave {
         System.out.println("Running Dave...");
 
         try {
-             Dave d = new Dave(args);
+             /*Dave d = */new Dave(args);
         } catch (Exception e) {
              System.out.println("Dave's main err: " + e.getMessage());
              e.printStackTrace();

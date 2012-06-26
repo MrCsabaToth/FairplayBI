@@ -45,11 +45,11 @@ public class UnaryOpExpression extends OperationExpression {
 	 * This method is used in the second phase of the optimization.
 	 * @return an array of the input LvalExpressions of this gate.
 	 */
-	public Vector returnInputs() {
-		Vector result = new Vector();
+	public Vector<LvalExpression> returnInputs() {
+		Vector<LvalExpression> result = new Vector<LvalExpression>();
 
 		if (middle instanceof LvalExpression) {
-			result.add(middle);
+			result.add((LvalExpression)middle);
 		}
 
 		return result;
@@ -136,9 +136,6 @@ public class UnaryOpExpression extends OperationExpression {
 	 * is a result of an unary operator.
 	 */
 	public boolean hasUnaryInput() {
-		Statement  s;
-		Expression sRHS; // RHS of s
-
 		if (middle instanceof LvalExpression &&
 			    ((LvalExpression) middle).hasUnaryInput()) {
 			return true;
@@ -232,11 +229,11 @@ public class UnaryOpExpression extends OperationExpression {
 	 * This method is used in the second phase of the optimization.
 	 * @return an array of the input LvalExpressions of this gate.
 	 */
-	public Vector getLvalExpressionInputs() {
-		Vector result = new Vector();
+	public Vector<LvalExpression> getLvalExpressionInputs() {
+		Vector<LvalExpression> result = new Vector<LvalExpression>();
 
 		if (middle instanceof LvalExpression) {
-			result.add(middle);
+			result.add((LvalExpression)middle);
 		}
 
 		return result;

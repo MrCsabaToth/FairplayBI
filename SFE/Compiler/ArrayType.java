@@ -90,8 +90,8 @@ public class ArrayType extends ParentType {
 	 * entries lvalue.
 	 * @param base the lvalue that called the this method (base.type == this)
 	 */
-	public Vector getDerivedLvalues(Lvalue base) {
-		Vector result = new Vector();
+	public Vector<Lvalue> getDerivedLvalues(Lvalue base) {
+		Vector<Lvalue> result = new Vector<Lvalue>();
 		result.add(base);
 
 		// array$ 
