@@ -430,16 +430,19 @@ public class Gate implements Serializable {
         MyUtil.md.update(MyUtil.toByteArray(gate_index));
         MyUtil.md.update(MyUtil.toByteArray(permuted_index));
 
-        for (i = 0 ; i < n_inputs ; i++) {
-
-            if (index >= 0) {
-                bit = (index >> i) & 1;
-                MyUtil.md.update(in_gates[i].getCode(bit));
-            } else
-                MyUtil.md.update(in_gates[i].garbled_value);
-
-            if (i == 0) key = MyUtil.md.digest();
-            else        key = MyUtil.xorArrays (key, MyUtil.md.digest());
+        if (n_inputs == 0) {
+        	key = MyUtil.md.digest();
+        } else {
+        	for (i = 0 ; i < n_inputs ; i++) {
+	            if (index >= 0) {
+	                bit = (index >> i) & 1;
+	                MyUtil.md.update(in_gates[i].getCode(bit));
+	            } else
+	                MyUtil.md.update(in_gates[i].garbled_value);
+	
+	            if (i == 0) key = MyUtil.md.digest();
+	            else        key = MyUtil.xorArrays (key, MyUtil.md.digest());
+	        }
         }
 
         return key;

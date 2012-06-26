@@ -8,6 +8,7 @@ arbitrarily long integers. Related links:
 - FairplayPF has a patch for Fairplay: http://thomaschneider.de/FairplayPF/
 
 Changes to the original source:
+- Fix NullPointerException bug to allow for returning complex results to parties
 - FairplayFP patch
 - All cointainer classes (Vector, Map, Set, etc) was converted to type-safe generics
 - Had to add Compiler/InputFormat.java to be able to fully accomplish the type-safe generics
