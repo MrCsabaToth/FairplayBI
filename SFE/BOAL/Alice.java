@@ -38,8 +38,8 @@ public class Alice {
 	 * @param stats - print run statistics in the end
 	 */
 	public Alice(String circuit_filename, String fmt_filename, String sseed,
-			String hostname, int num_iterations, boolean stats) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			String hostname, int num_iterations, boolean stats, InputStreamReader isr) throws Exception {
+		BufferedReader br = new BufferedReader(isr);
 		int i, j;
 		int ot_type;
 		int cc_num;
@@ -262,13 +262,14 @@ public class Alice {
 		String filename;
 		String circ_fname;
 		String fmt_fname;
+		String input_fname;
 		int num_iterations;
 		boolean edit = false;
 		boolean compile = false;
 		boolean run_stats = false;
 		boolean run = false;
 		boolean opt = false;
-
+		InputStreamReader isr = null;
 
 		// Load logging configuration file
 		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
@@ -290,7 +291,7 @@ public class Alice {
 		if (run && (args.length < 4))
 			aliceUsage(3);
 
-		filename = new String(args[1]);
+		filename = MyUtil.pathFile(new String(args[1]));
 		if (opt) {
 			circ_fname = new String(filename + ".Opt.circuit");
 			fmt_fname = new String(filename + ".Opt.fmt");
@@ -300,11 +301,24 @@ public class Alice {
 			fmt_fname = new String(filename + ".NoOpt.fmt");
 		}
 
+		input_fname = new String(filename + ".Alice.input");
+		{
+			File f = new File(input_fname);
+
+			if (f.exists()) {
+				System.out.println("Alice's input will be read from file: " + input_fname + " instead of stdin");
+				isr = new FileReader(f);
+			} else {
+				System.out.println("Alice's input will be read from stdin, no input file found");
+				isr = new InputStreamReader(System.in);
+			}
+		}
+
 		if (compile) {
 			File f = new File(filename);
 
 			if (!f.exists()) {
-				System.out.println("Input file " + filename + " not found");
+				System.out.println("Input program file " + filename + " not found");
 				aliceUsage(4);
 			}
 		}
@@ -315,9 +329,9 @@ public class Alice {
 
 			if (!f1.exists() || !f2.exists()) {
 				if (!f1.exists())
-					System.out.println("Input file " + circ_fname + " not found");
+					System.out.println("Input circuit file " + circ_fname + " not found");
 				if (!f2.exists())
-					System.out.println("Input file " + fmt_fname + " not found");
+					System.out.println("Input format file " + fmt_fname + " not found");
 				aliceUsage(5);
 			}
 		}
@@ -339,7 +353,7 @@ public class Alice {
 					num_iterations = 1 ;
 				else
 					num_iterations = Integer.parseInt(args[4]);
-				/*Alice a = */new Alice(circ_fname, fmt_fname, args[2], args[3], num_iterations, run_stats);
+				/*Alice a = */new Alice(circ_fname, fmt_fname, args[2], args[3], num_iterations, run_stats, isr);
 			} catch (Exception e) {
 				System.out.println("Alice's main err: " + e.getMessage());
 				e.printStackTrace();
