@@ -93,7 +93,6 @@ public class Formatter implements Serializable {
      * @param c a gate-level circuit
      */
     public void markIO (Circuit c, int[] tsize) {
-
         tsize[0] = 0;
         tsize[1] = 0;
 
@@ -133,12 +132,11 @@ public class Formatter implements Serializable {
      * @param is_alice indicates whether this input is for Alice or Bob
      */
     public void getInput(Circuit c, boolean is_alice, BufferedReader br) {
-        IO io = null;
         String inpline = null;
 
         // Scan through all format objects 
         for (int i = 0; i < FMT.size(); i++) {
-            io = FMT.elementAt(i);
+        	IO io = FMT.elementAt(i);
             logger.debug("pulled element from FMT");
 
             // Verify it's an input object of the approriate player (i.e., Alice/Bob).
@@ -201,32 +199,36 @@ public class Formatter implements Serializable {
      * @param is_alice indicates whether this output is for Alice or Bob
      */
     public void getOutput(Circuit c, boolean is_alice) {
-        int bit;
-        BigInteger value = new BigInteger("0");
-        IO io = null;
-
         // Scan through all format objects 
         for (int i = 0; i < FMT.size(); i++) {
-            io = FMT.elementAt(i);
+            IO io = FMT.elementAt(i);
 
             // Verify it's an output object of the approriate player (i.e., Alice/Bob).
             if (io.isInput() || (is_alice != io.isAlice())) {
                 continue;
             }
 
+            BigInteger value = new BigInteger("0");
+            int numBits = io.getNLines();
             // collect all specified output bits, one by one
-            for (int j = 0; j < io.getNLines(); j++) {
+            for (int j = 0; j < numBits; j++) {
                 // this bit belongs to output of j'th line_num
                 int line_num = io.getLinenum(j);
 
                 // this is the value of the gate at line_num
-                bit = c.getGate(line_num).getValue();
+                int bit = c.getGate(line_num).getValue();
                 logger.debug("output bit " + line_num + " is: " + bit);
 
                 if (bit > 0)
                 	value = value.setBit(j);
+                else
+                	value = value.clearBit(j);
             }
 
+            BigInteger bref = BigInteger.ONE.shiftLeft(numBits - 1);
+            if (value.compareTo(bref) > 0) {	// Negative number in two's complement representation => correct it
+            	value = value.subtract(bref.shiftLeft(1));
+            }
             System.out.println(io.getPrefix() + value);
         }
     }
