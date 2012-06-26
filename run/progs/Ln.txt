@@ -1,0 +1,40 @@
+program beta {
+  const MaxN = 128;  //max N
+  type int = Int<128>;
+
+  type AliceInput = int;
+  type BobInput = int;
+
+  type AliceOutput = int;
+  type BobOutput = int;
+
+  type Input = struct {AliceInput alice, BobInput bob};
+  type Output = struct {AliceOutput alice, BobOutput bob};
+
+  function Output output(Input input) {
+    var int x;
+    var int est;
+    var int error;
+    var int n;
+    // for-loop indices
+    var int i;
+
+    est = 1;
+    error = 99;
+    n = 0;
+
+    x = input.bob + input.alice;
+
+    for(i=1 to MaxN) {
+      if (est < x)
+      {
+        est = est + est;
+        n = n + 1;
+      }
+    }
+
+    output.alice = x;
+    output.bob = n;
+  }
+
+}
