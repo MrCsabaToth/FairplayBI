@@ -62,6 +62,7 @@ off of output wires 100,101,102; likewise is Bob's output.
 public class Formatter implements Serializable {
 	private static final long serialVersionUID = 7755453784445270903L;
 
+	protected static String newline = System.getProperty("line.separator");
 	private static final Logger logger = Logger.getLogger(Formatter.class);
     protected static final int EOF_INDICATOR = -2; // Input file ended
     protected static final int WORD_INDICATOR = -1; // Token read was a WORD
@@ -180,12 +181,12 @@ public class Formatter implements Serializable {
 
     //---------------------------------------------------------------
  
-    public void getBobOutput(Circuit c) {
-        getOutput(c, false);
+    public void getBobOutput(Circuit c, BufferedWriter bw) {
+        getOutput(c, false, bw);
     }
 
-    public void getAliceOutput(Circuit c) {
-        getOutput(c, true);
+    public void getAliceOutput(Circuit c, BufferedWriter bw) {
+        getOutput(c, true, bw);
     }
 
     //---------------------------------------------------------------
@@ -198,7 +199,7 @@ public class Formatter implements Serializable {
      * @param c a gate-level circuit
      * @param is_alice indicates whether this output is for Alice or Bob
      */
-    public void getOutput(Circuit c, boolean is_alice) {
+    public void getOutput(Circuit c, boolean is_alice, BufferedWriter bw) {
         // Scan through all format objects 
         for (int i = 0; i < FMT.size(); i++) {
             IO io = FMT.elementAt(i);
@@ -208,28 +209,44 @@ public class Formatter implements Serializable {
                 continue;
             }
 
-            BigInteger value = new BigInteger("0");
-            int numBits = io.getNLines();
-            // collect all specified output bits, one by one
-            for (int j = 0; j < numBits; j++) {
-                // this bit belongs to output of j'th line_num
-                int line_num = io.getLinenum(j);
+			try {
+				if (bw != null)
+					bw.write(newline);
+				else
+					System.out.println();
 
-                // this is the value of the gate at line_num
-                int bit = c.getGate(line_num).getValue();
-                logger.debug("output bit " + line_num + " is: " + bit);
-
-                if (bit > 0)
-                	value = value.setBit(j);
-                else
-                	value = value.clearBit(j);
-            }
-
-            BigInteger bref = BigInteger.ONE.shiftLeft(numBits - 1);
-            if (value.compareTo(bref) > 0) {	// Negative number in two's complement representation => correct it
-            	value = value.subtract(bref.shiftLeft(1));
-            }
-            System.out.println(io.getPrefix() + value);
+				BigInteger value = new BigInteger("0");
+	            int numBits = io.getNLines();
+	            // collect all specified output bits, one by one
+	            for (int j = 0; j < numBits; j++) {
+	                // this bit belongs to output of j'th line_num
+	                int line_num = io.getLinenum(j);
+	
+	                // this is the value of the gate at line_num
+	                int bit = c.getGate(line_num).getValue();
+	                logger.debug("output bit " + line_num + " is: " + bit);
+	
+	                if (bit > 0)
+	                	value = value.setBit(j);
+	                else
+	                	value = value.clearBit(j);
+	            }
+	
+	            BigInteger bref = BigInteger.ONE.shiftLeft(numBits - 1);
+	            if (value.compareTo(bref) > 0) {	// Negative number in two's complement representation => correct it
+	            	value = value.subtract(bref.shiftLeft(1));
+	            }
+	        	String outputStr = io.getPrefix() + value;
+	            if (bw != null) {
+					bw.write(outputStr);
+					bw.write(newline);
+	            } else {
+	            	System.out.println(outputStr);
+	            }
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
 

@@ -478,8 +478,8 @@ public class Parser {
         //c.evalCircuit();
         c.evalGarbledCircuit(true, true);
 
-        f.getAliceOutput(c); // print Alice's output
-        f.getBobOutput(c); // print Bob's output
+        f.getAliceOutput(c, null); // print Alice's output
+        f.getBobOutput(c, null); // print Bob's output
     }
 
     public class ParseError extends Exception {

@@ -35,7 +35,7 @@ public class Bob {
 	 * @param sot_type - type of OT to perform (String)
 	 */
 	public Bob(String circuit_filename, String fmt_filename, String sseed, String sot_type,
-		InputStreamReader isr) throws IOException {
+		InputStreamReader isr, BufferedWriter bw) throws IOException {
 		BufferedReader br = new BufferedReader(isr);
 		int i, j;
 		int num_of_iterations;
@@ -189,7 +189,7 @@ public class Bob {
 			OutPayload = new byte[OutPayloadSize];
 			MyUtil.receiveBytes (fromAlice, OutPayload, OutPayloadSize);
 			f.finjectOutPayload (c, OutPayload, false);
-			f.getBobOutput(c);
+			f.getBobOutput(c, bw);
 		}
 
 		// Cleanup
@@ -241,11 +241,13 @@ public class Bob {
 		String circ_fname;
 		String fmt_fname;
 		String input_fname;
+		String output_fname;
 		boolean edit = false;
 		boolean compile = false;
 		boolean run = false;
 		boolean opt = false;
 		InputStreamReader isr = null;
+		BufferedWriter bw = null;
 
 		// Load logging configuration file
 		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
@@ -283,6 +285,15 @@ public class Bob {
 			if (f.exists()) {
 				System.out.println("Bob's input will be read from file: " + input_fname + " instead of stdin");
 				isr = new FileReader(f);
+
+				if (run) {
+					output_fname = new String(filename + ".Bob.output");
+					File of = new File(output_fname);
+					if (of.exists())
+						of.delete();
+					of.createNewFile();
+					bw = new BufferedWriter(new FileWriter(of));
+				}
 			} else {
 				System.out.println("Bob's input will be read from stdin, no input file found");
 				isr = new InputStreamReader(System.in);
@@ -324,11 +335,13 @@ public class Bob {
 		if (run) {
 			System.out.println("Running Bob...");
 			try {
-				/*Bob b = */new Bob(circ_fname, fmt_fname, args[2], args[3], isr);
+				/*Bob b = */new Bob(circ_fname, fmt_fname, args[2], args[3], isr, bw);
 			} catch (Exception e) {
 				System.out.println("Bob's main err: " + e.getMessage());
 				e.printStackTrace();
 			}
+			if (isr != null) isr.close();
+			if (bw != null) bw.close();
 		}
 	}
 }

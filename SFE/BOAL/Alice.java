@@ -38,7 +38,8 @@ public class Alice {
 	 * @param stats - print run statistics in the end
 	 */
 	public Alice(String circuit_filename, String fmt_filename, String sseed,
-			String hostname, int num_iterations, boolean stats, InputStreamReader isr) throws Exception {
+			String hostname, int num_iterations, boolean stats, InputStreamReader isr,
+			BufferedWriter bw) throws Exception {
 		BufferedReader br = new BufferedReader(isr);
 		int i, j;
 		int ot_type;
@@ -201,7 +202,7 @@ public class Alice {
 			MyUtil.sendBytes (toBob, OutPayload, true);
 
 			// print Alice's output
-			f.getAliceOutput(c); 
+			f.getAliceOutput(c, bw); 
 
 			sum4 += MyUtil.deltaTime (false);
 		}
@@ -263,6 +264,7 @@ public class Alice {
 		String circ_fname;
 		String fmt_fname;
 		String input_fname;
+		String output_fname;
 		int num_iterations;
 		boolean edit = false;
 		boolean compile = false;
@@ -270,6 +272,7 @@ public class Alice {
 		boolean run = false;
 		boolean opt = false;
 		InputStreamReader isr = null;
+		BufferedWriter bw = null;
 
 		// Load logging configuration file
 		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
@@ -308,6 +311,15 @@ public class Alice {
 			if (f.exists()) {
 				System.out.println("Alice's input will be read from file: " + input_fname + " instead of stdin");
 				isr = new FileReader(f);
+
+				if (run) {
+					output_fname = new String(filename + ".Alice.output");
+					File of = new File(output_fname);
+					if (of.exists())
+						of.delete();
+					of.createNewFile();
+					bw = new BufferedWriter(new FileWriter(of));
+				}
 			} else {
 				System.out.println("Alice's input will be read from stdin, no input file found");
 				isr = new InputStreamReader(System.in);
@@ -353,11 +365,13 @@ public class Alice {
 					num_iterations = 1 ;
 				else
 					num_iterations = Integer.parseInt(args[4]);
-				/*Alice a = */new Alice(circ_fname, fmt_fname, args[2], args[3], num_iterations, run_stats, isr);
+				/*Alice a = */new Alice(circ_fname, fmt_fname, args[2], args[3], num_iterations, run_stats, isr, bw);
 			} catch (Exception e) {
 				System.out.println("Alice's main err: " + e.getMessage());
 				e.printStackTrace();
 			}
+			if (isr != null) isr.close();
+			if (bw != null) bw.close();
 		}
 	}
 }
