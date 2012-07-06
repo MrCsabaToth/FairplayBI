@@ -10,11 +10,14 @@ arbitrarily long integers. Related links:
 Changelist
 ---
 - FairplayFP patch
-- All cointainer classes (Vector, Map, Set, etc) was converted to type-safe generics
+- All cointainer classes (Vector, Map, Set, etc) were converted to type-safe generics
 - Had to add Compiler/InputFormat.java to be able to fully accomplish the type-safe generics
 - Converted the internal representation of Int<*> SMC program types to BigInteger instead of Java int
 - Changed the party (Alice/Bob) run-time input parsing so it can take in BigIntegers
-- It is possible now to place the run-time input into files instead of a console input
+- It is possible now to place the run-time input into files (name derived from the other file names
+by convention) instead of a console input
+- If the file comes from the input, than the output will be written to a file too, file name is also
+derived from the other file names by convention
 - The software searches for the program script relative to the rundir Java environment variable
 (that was already used for finding the log4j configuration file)
 - The output is able to display negative integer results (original Fairplay couldn't even do that with int)
@@ -23,10 +26,10 @@ Changelist
 
 Effects of changes
 ---
-- The source code gat modern Java conform, safer
+- The source code somewhat got modern Java conform, safer
 - Really able to handle arbitrarily long integers
 - Can integrate with other solutions easier (run-time input from file)
-- There can be performance penalty for some BigInteger operations compared to int (simple incerement for example)
+- There can be performance penalty for some BigInteger operations compared to int (simple increment for example)
 - The source code got cleaner (converting from and to bit representations: BigInteger natively supports that while
 with integer there were bit manipulation/shift operations)
 
