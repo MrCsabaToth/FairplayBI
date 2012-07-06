@@ -1,0 +1,12 @@
+out/*
+*.class
+run/progs/*
+
+# IDE
+.idea/*
+*.iml
+
+# temp files
+.DS_Store
+*~
+*.swp
