@@ -26,7 +26,7 @@ inputs and outputs. FairplayBI assumes that the program file and other input and
 "progs" subdirectory of the folder specified in the rundir variable.
 
 FairplayBI
-+- src
+`+- src
    +- SFE
    |  \- ... Java source files
    \- run - this directory supposed to be the "rundir" environment variable
@@ -39,7 +39,7 @@ FairplayBI
          |- Sub.txt.Alice.input - Alice's assumed input in file
          |- Sub.txt.Bob.input - Bob's assumed input in file
          |- Sub.txt.Alice.output - Alice's output to file (in case the input was from file)
-         \- Sub.txt.Bob.output - Bob's output to file (in case the input was from file)
+         \- Sub.txt.Bob.output - Bob's output to file (in case the input was from file)`
 
 If FairplayBI automatically searches for a file type input by postfixing ".Alice.input" or ".Bob.input" to the
 program file full path.  If FairplayBI doesn't find these files, it'll wait for the corresponding input on the
