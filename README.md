@@ -26,20 +26,20 @@ inputs and outputs. FairplayBI assumes that the program file and other input and
 "progs" subdirectory of the folder specified in the rundir variable.
 
 FairplayBI
-`+- src
-   +- SFE
-   |  \- ... Java source files
-   \- run - this directory supposed to be the "rundir" environment variable
-      |- Readme.txt - usage guide
-      |- SFE_logcfg.lcf - log4j configuration file
-      \- progs
-         |- Sub.txt - the circuit program, unpit of the compilation step
-         |- Sub.txt.Opt.circuit - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)
-         |- Sub.txt.Opt.fmt - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)
-         |- Sub.txt.Alice.input - Alice's assumed input in file
-         |- Sub.txt.Bob.input - Bob's assumed input in file
-         |- Sub.txt.Alice.output - Alice's output to file (in case the input was from file)
-         \- Sub.txt.Bob.output - Bob's output to file (in case the input was from file)`
+`+- src`
+`   +- SFE`
+`   |  \- ... Java source files`
+`   \- run - this directory supposed to be the "rundir" environment variable`
+`      |- Readme.txt - usage guide`
+`      |- SFE_logcfg.lcf - log4j configuration file`
+`      \- progs`
+`         |- Sub.txt - the circuit program, unpit of the compilation step`
+`         |- Sub.txt.Opt.circuit - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)`
+`         |- Sub.txt.Opt.fmt - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)`
+`         |- Sub.txt.Alice.input - Alice's assumed input in file`
+`         |- Sub.txt.Bob.input - Bob's assumed input in file`
+`         |- Sub.txt.Alice.output - Alice's output to file (in case the input was from file)`
+`         \- Sub.txt.Bob.output - Bob's output to file (in case the input was from file)`
 
 If FairplayBI automatically searches for a file type input by postfixing ".Alice.input" or ".Bob.input" to the
 program file full path.  If FairplayBI doesn't find these files, it'll wait for the corresponding input on the
