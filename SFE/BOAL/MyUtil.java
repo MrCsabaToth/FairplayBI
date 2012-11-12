@@ -225,6 +225,21 @@ public class MyUtil {
     //---------------------------------------------------------------
 
     /**
+     * pathFile - check $rundir variable
+     */
+    public static void checkRundir() {
+		String rundirStr = MyUtil.pathFile("");
+		System.out.println("rundir Java environment variable's value: " + rundirStr);
+		if (rundirStr.equals("null")) {
+			System.out.println("WARNING: rundir variable is not set!");
+			System.out.println("WARNING: All input and output files are computed relative to that path by default!");
+			System.out.println("ADVICE: Set it's value by specifying a '-Drundir=/your/path/' parameter to the JVM!");
+		}
+    }
+
+    //---------------------------------------------------------------
+
+    /**
      * deltaTime - profiling tool for measuring time spent in 
      * different program sections, returns the delta time 
      * (in milli-secs) from previous call to this routine.

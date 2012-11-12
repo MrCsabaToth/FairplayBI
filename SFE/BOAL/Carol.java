@@ -88,6 +88,8 @@ public class Carol {
      */
     public static void main(String[] args) throws Exception {
 
+		MyUtil.checkRundir();
+
         // Load logging configuration file
 		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
 	
