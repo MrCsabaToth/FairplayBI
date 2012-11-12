@@ -8,6 +8,10 @@ package SFE.Compiler;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StreamTokenizer;
+import java.math.BigInteger;
+import java.text.ParseException;
+
+import SFE.BOAL.MyUtil;
 
 
 /**
@@ -24,7 +28,7 @@ public class Tokenizer {
 	 * Private data members
 	 */
 	private StreamTokenizer tokenizer;
-	private int keywordIndex; // holds the index of the current keyword 
+	private int keywordIndex; // holds the index of the current keyword
 
 	//~ Constructors -----------------------------------------------------------
 
@@ -35,11 +39,16 @@ public class Tokenizer {
 	public Tokenizer(Reader input) {
 		tokenizer = new StreamTokenizer(input);
 
+		tokenizer.resetSyntax();	// Needed so the we can avoid number parsing and parse integers by ourselves
+		
+		tokenizer.whitespaceChars(0, ' ');	// Because of resetSyntax we have to take care of white-spaces too explicitly
+
 		// set the tokenizer properties
 		tokenizer.eolIsSignificant(false);
 		tokenizer.lowerCaseMode(false);
 
-		tokenizer.parseNumbers();
+		//tokenizer.parseNumbers();	// We intentionally don't turn on number parsing, because that's the only way to support big integer parsing
+									// Otherwise StreamTokenizer would either puke, or provide a double floating point which would mean precision loss
 
 		/* defining the symbols of the language */
 		tokenizer.ordinaryChar('.'); // for structs
@@ -62,7 +71,9 @@ public class Tokenizer {
 		tokenizer.slashSlashComments(true);
 		tokenizer.slashStarComments(true);
 		tokenizer.wordChars('_', '_');
-		tokenizer.wordChars('1', '0');
+		tokenizer.wordChars('0', '9');	// For BigInteger parsing
+		tokenizer.wordChars('a', 'z');
+		tokenizer.wordChars('A', 'Z');
 	}
 
 	//~ Methods ----------------------------------------------------------------
@@ -93,7 +104,7 @@ public class Tokenizer {
 		tokenizer.nextToken();
 	}
 
-	/*
+	/**
 	 * A private method that checks if current token is a keyword.
 	 * @return the keyword constant if and only if current token is a keyword; -1 otherwise
 	 */
@@ -129,6 +140,8 @@ public class Tokenizer {
 				return STRING_CONST;
 			} else if (checkKeyword() != -1) {
 				return KEYWORD;
+			} else if (Character.isDigit(tokenizer.sval.charAt(0))) {
+				return INT_CONST;
 			}
 			return IDENTIFIER;
 		} else if (tokenizer.ttype == StreamTokenizer.TT_NUMBER) {
@@ -181,10 +194,18 @@ public class Tokenizer {
 	/**
 	 * Return the integer in current token.
 	 * This method should be called only if tokenType() is INT_CONST.
-	 * @return the current token integer value.
+	 * @return the current token's BigInteger value.
 	 */
-	public double numberVal() {
-		return tokenizer.nval;
+	public BigInteger bigIntVal() throws ParseException {
+		try {
+			return MyUtil.parseBigInteger(tokenizer.sval);
+		}
+        catch(NumberFormatException e) {
+            String errorMsg = "Tokenizer: constant is not a well formatted integer number: " + tokenizer.sval;
+            ParseException pe = new ParseException(errorMsg, tokenizer.lineno());
+            pe.initCause(e);
+        	throw pe;
+        }
 	}
 
 	/**

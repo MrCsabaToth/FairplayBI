@@ -141,7 +141,7 @@ public class SFECompiler {
 					break;
 
 				case Tokenizer.INT_CONST:
-					tmp = BigInteger.valueOf((long)tokenizer.numberVal());
+					tmp = tokenizer.bigIntVal();
 
 					break;
 
@@ -1356,7 +1356,7 @@ public class SFECompiler {
 				break;
 
 			case Tokenizer.INT_CONST:
-				expression = new IntConstant(BigInteger.valueOf((long)tokenizer.numberVal()));
+				expression = new IntConstant(tokenizer.bigIntVal());
 				advance("program not ended");
 
 				break;

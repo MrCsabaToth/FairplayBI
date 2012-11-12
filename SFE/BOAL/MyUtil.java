@@ -6,13 +6,9 @@
 package SFE.BOAL;
 
 import org.apache.log4j.*;
-
 import java.io.*;
-
 import java.math.*;
-
 import java.security.*;
-
 import java.util.*;
 
 
@@ -54,6 +50,7 @@ public class MyUtil {
             "642e936c0332660aaabe5387d18376b651cb2a77d906537e8064e50976511ed5" +
             "621d0891b12642c86e5ed23eb3ac8802c45340163a10bfce9978473152a4b5e",
             16);
+    private static int radix = 10;
 
     //---------------------------------------------------------------
 
@@ -842,5 +839,41 @@ public class MyUtil {
 		    output[3+r.length+j] = bi_byte_array[j]; 
 	
 		return (new BigInteger(output));
+    }
+
+	/**
+	 * Parses the input string into the BigInteger with the appropriate radix.
+	 * An decimal integer consists of only decimal digits.
+	 * A binary integer is prefixed with "0b" or "0B" and followed by positive number of binary digits.
+	 * An octal integer is prefixed with "0o" or "0O" and followed by positive number of octal digits.
+	 * A hexadecimal integer is prefixed with "0x" or "0X" and followed by positive number of hexadecimal digits.
+	 * @param sval: the input token string
+	 * @return Parsed BigInteger if the number format is OK, NumberFormatException exception otherwise.
+	 */
+    public static BigInteger parseBigInteger(String sval) throws NumberFormatException {
+		int beginIndex = 0;
+		int rx = 10;
+		boolean specialRadix = false;
+		if (sval.length() > 2 && sval.charAt(0) == '0') {
+			char radixIndicator = Character.toLowerCase(sval.charAt(1));
+			switch(radixIndicator) {
+				case 'b': rx = 2; specialRadix = true; break;
+				case 'o': rx = 8; specialRadix = true; break;
+				case 'x': rx = 16; specialRadix = true; break;
+			}
+			if (specialRadix)
+				beginIndex = 2;
+		}
+		setRadix(rx);
+		BigInteger bigInt = new BigInteger(sval.substring(beginIndex), rx);
+		return bigInt;
+	}
+
+    public static int getRadix() {
+    	return radix;
+    }
+    
+    public static void setRadix(int rx) {
+    	radix = rx;
     }
 }

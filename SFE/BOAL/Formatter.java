@@ -158,7 +158,17 @@ public class Formatter implements Serializable {
             }
 
             StringTokenizer st = new StringTokenizer(inpline);
-            BigInteger val = new BigInteger(st.nextToken());
+            BigInteger val = BigInteger.ZERO;
+            String intTokenStr = st.nextToken();
+            try {
+            	val = MyUtil.parseBigInteger(intTokenStr);
+            }
+            catch(NumberFormatException e) {
+                logger.error("Formatter: " + (is_alice ? "Alice" : "Bob") +
+                		"'s input is not a well formatted integer number: " + intTokenStr);
+                logger.error("\n" + e.getMessage());
+                logger.error("\n" + e.getStackTrace());
+            }
 
             logger.debug("input is: " + val);
 
@@ -237,7 +247,13 @@ public class Formatter implements Serializable {
 	            if (value.compareTo(bref) > 0) {	// Negative number in two's complement representation => correct it
 	            	value = value.subtract(bref.shiftLeft(1));
 	            }
-	        	String outputStr = io.getPrefix() + value;
+	            String valuePrefix = "";
+	            switch(MyUtil.getRadix()) {
+		            case 2: valuePrefix = "0b"; break;
+		            case 8: valuePrefix = "0o"; break;
+		            case 16: valuePrefix = "0x"; break;
+	            }
+	        	String outputStr = io.getPrefix() + " " + valuePrefix + value.toString(MyUtil.getRadix());
 	            if (bw != null) {
 					bw.write(outputStr);
 					bw.write(newline);
