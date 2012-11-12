@@ -1,5 +1,6 @@
 // OutputWriter.java.
 // Copyright (C) 2004 Naom Nisan, Ziv Balshai, Amir Levy.
+// Copyright (C) 2012 Csaba Toth, Wei Xie
 // See full copyright license terms in file ../GPL.txt
 
 package SFE.Compiler;

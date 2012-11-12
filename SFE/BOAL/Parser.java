@@ -1,5 +1,6 @@
 // Parser.java - SFE circuits parser.
 // Copyright (C) 2004 Dahlia Malkhi, Yaron Sella. 
+// Copyright (C) 2012 Csaba Toth, Wei Xie
 // See full copyright license terms in file ../GPL.txt
 
 package SFE.BOAL;

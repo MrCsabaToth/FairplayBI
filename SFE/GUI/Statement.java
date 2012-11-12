@@ -1,5 +1,6 @@
 // Statement.java.
 // Copyright (C) 2004 Dahlia Malkhi, Dudi Einey.
+// Copyright (C) 2012 Csaba Toth, Wei Xie
 // See full copyright license terms in file ../GPL.txt
 
 package SFE.GUI;

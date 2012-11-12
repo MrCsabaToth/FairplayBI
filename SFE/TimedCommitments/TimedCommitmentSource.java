@@ -5,7 +5,7 @@
 //
 // Created November 20, 2003 by Ori Peleg
 //
-// $Id: TimedCommitmentSource.java,v 1.11 2004/07/04 19:11:01 orip Exp $
+// Copyright (C) 2012 Csaba Toth, Wei Xie
 package SFE.TimedCommitments;
 
 import java.math.BigInteger;

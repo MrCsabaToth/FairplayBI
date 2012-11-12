@@ -1,6 +1,7 @@
-//Bob.java - Bob's part of the 2-party SFE protocol.
-//Copyright (C) 2004 Dahlia Malkhi, Yaron Sella.
-//See full copyright license terms in file ../GPL.txt
+// Bob.java - Bob's part of the 2-party SFE protocol.
+// Copyright (C) 2004 Dahlia Malkhi, Yaron Sella.
+// Copyright (C) 2012 Csaba Toth, Wei Xie
+// See full copyright license terms in file ../GPL.txt
 
 package SFE.BOAL;
 
