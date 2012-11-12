@@ -250,6 +250,8 @@ public class Bob {
 		InputStreamReader isr = null;
 		BufferedWriter bw = null;
 
+		MyUtil.checkRundir();
+
 		// Load logging configuration file
 		PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
 

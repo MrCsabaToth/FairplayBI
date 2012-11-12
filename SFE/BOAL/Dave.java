@@ -88,10 +88,12 @@ public class Dave {
      */
     public static void main(String[] args) throws Exception {
 
-        // Load logging configuration file
-	PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
+		MyUtil.checkRundir();
 
-	// Various legality tests on command line parameters
+        // Load logging configuration file
+    	PropertyConfigurator.configure(MyUtil.pathFile("SFE_logcfg.lcf"));
+
+	    // Various legality tests on command line parameters
 
         if (args.length != 2)
             daveUsage();
