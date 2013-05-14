@@ -1,19 +1,19 @@
 FairplayBI
 ==========
 
-A version of Fairplay software for 2-party SMC (Secure Multi-party Computation) which is _really_ able to handle
+A version of Fairplay software for 2-party SMC (Secure Multi-party Computation) which is __really__ able to handle
 arbitrarily long integers. Related links:
-- Secure multi-party computation: http://en.wikipedia.org/wiki/Secure_multi-party_computation
-- Original project: http://www.cs.huji.ac.il/project/Fairplay/
-- FairplayPF has a patch for Fairplay: http://thomaschneider.de/FairplayPF/
+- [Secure multi-party computation](http://en.wikipedia.org/wiki/Secure_multi-party_computation)
+- [Original Fairplay project](http://www.cs.huji.ac.il/project/Fairplay/)
+- [FairplayPF patch for Fairplay](http://thomaschneider.de/FairplayPF/)
 
 Quick example
 ---
 Lets say you wanna communicate according to the "Sub.txt" circuit program specification.
-1. Always specify rundir for the JVM: "-Drundir=/home/ctoth/FairplayBI/bin/run/"
-2. Compile the program with Alice or Bob with parameters: "-c progs/Sub.txt"
-3. Start Bob with parameters: "-r progs/Sub.txt randomstring1 4"
-4. Start Alice with parameters: "-r progs/Sub.txt randomstring2 localhost"
+1.  Always specify rundir for the JVM: "-Drundir=/home/ctoth/FairplayBI/bin/run/"
+2.  Compile the program with Alice or Bob with parameters: "-c progs/Sub.txt"
+3.  Start Bob with parameters: "-r progs/Sub.txt randomstring1 4"
+4.  Start Alice with parameters: "-r progs/Sub.txt randomstring2 localhost"
 See later about the explanation of these.
 
 Convention over configuration
