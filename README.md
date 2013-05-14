@@ -10,10 +10,10 @@ arbitrarily long integers. Related links:
 Quick example
 ---
 Lets say you wanna communicate according to the "Sub.txt" circuit program specification.
-0. Always specify rundir for the JVM: "-Drundir=/home/ctoth/FairplayBI/bin/run/"
-1. Compile the program with Alice or Bob with parameters: "-c progs/Sub.txt"
-2. Start Bob with parameters: "-r progs/Sub.txt randomstring1 4"
-3. Start Alice with parameters: "-r progs/Sub.txt randomstring2 localhost"
+1. Always specify rundir for the JVM: "-Drundir=/home/ctoth/FairplayBI/bin/run/"
+2. Compile the program with Alice or Bob with parameters: "-c progs/Sub.txt"
+3. Start Bob with parameters: "-r progs/Sub.txt randomstring1 4"
+4. Start Alice with parameters: "-r progs/Sub.txt randomstring2 localhost"
 See later about the explanation of these.
 
 Convention over configuration
@@ -25,21 +25,21 @@ FairplayBI extends the usage of this rundir Java environment variable and levera
 inputs and outputs. FairplayBI assumes that the program file and other input and output files will reside in the
 "progs" subdirectory of the folder specified in the rundir variable.
 
-FairplayBI
-`+- src`
-`   +- SFE`
-`   |  \- ... Java source files`
-`   \- run - this directory supposed to be the "rundir" environment variable`
-`      |- Readme.txt - usage guide`
-`      |- SFE_logcfg.lcf - log4j configuration file`
-`      \- progs`
-`         |- Sub.txt - the circuit program, unpit of the compilation step`
-`         |- Sub.txt.Opt.circuit - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)`
-`         |- Sub.txt.Opt.fmt - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)`
-`         |- Sub.txt.Alice.input - Alice's assumed input in file`
-`         |- Sub.txt.Bob.input - Bob's assumed input in file`
-`         |- Sub.txt.Alice.output - Alice's output to file (in case the input was from file)`
-`         \- Sub.txt.Bob.output - Bob's output to file (in case the input was from file)`
+    FairplayBI
+    +- src
+       +- SFE
+       |  \- ... Java source files
+       \- run - this directory supposed to be the "rundir" environment variable
+          |- Readme.txt - usage guide
+          |- SFE_logcfg.lcf - log4j configuration file
+          \- progs
+             |- Sub.txt - the circuit program, unpit of the compilation step
+             |- Sub.txt.Opt.circuit - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)
+             |- Sub.txt.Opt.fmt - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)
+             |- Sub.txt.Alice.input - Alice's assumed input in file
+             |- Sub.txt.Bob.input - Bob's assumed input in file
+             |- Sub.txt.Alice.output - Alice's output to file (in case the input was from file)
+             \- Sub.txt.Bob.output - Bob's output to file (in case the input was from file)
 
 If FairplayBI automatically searches for a file type input by postfixing ".Alice.input" or ".Bob.input" to the
 program file full path.  If FairplayBI doesn't find these files, it'll wait for the corresponding input on the
