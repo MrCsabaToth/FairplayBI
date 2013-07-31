@@ -10,10 +10,12 @@ arbitrarily long integers. Related links:
 Quick example
 ---
 Lets say you wanna communicate according to the "Sub.txt" circuit program specification.
+
 1.  Always specify rundir for the JVM: "-Drundir=/home/ctoth/FairplayBI/bin/run/"
 2.  Compile the program with Alice or Bob with parameters: "-c progs/Sub.txt"
 3.  Start Bob with parameters: "-r progs/Sub.txt randomstring1 4"
 4.  Start Alice with parameters: "-r progs/Sub.txt randomstring2 localhost"
+
 See later about the explanation of these.
 
 Convention over configuration
