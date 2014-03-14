@@ -35,7 +35,7 @@ inputs and outputs. FairplayBI assumes that the program file and other input and
           |- Readme.txt - usage guide
           |- SFE_logcfg.lcf - log4j configuration file
           \- progs
-             |- Sub.txt - the circuit program, unpit of the compilation step
+             |- Sub.txt - the circuit program, input of the compilation step
              |- Sub.txt.Opt.circuit - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)
              |- Sub.txt.Opt.fmt - output of the comilation step, input of the run step (note: this may differ a little depending on circuit compilation options, but it's handled automatically later by Fairplay)
              |- Sub.txt.Alice.input - Alice's assumed input in file
